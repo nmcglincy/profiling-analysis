@@ -1,0 +1,107 @@
+# The voyage begins! 20141028
+# 
+# Downloading the data from the sequencing facility
+wget -m -nH --cut-dirs=4 ftp://GSLUSER:B206Stanley@islay.qb3.berkeley.edu//VCGSL_FTP/141020_HS3B/Project_Ingolia/Sample_NINM01_index1
+# Didn't quite get me what I wanted  - needed to --cut-dirs=5
+# 
+# Hi Nick,
+# 
+# We should now be set to pre-process the new libraries.
+# 
+# Perhaps you’ve already copied them off of the QB3 server — if not, there are instructions for doing this in the first section of a document called “Analysis Computers” on the lab Google Drive, adapted from an email Liana sent a while ago.
+# 
+# When you do this, you’ll get a folder containing a collection of .fastq.gz files. In this experiment, these contain all of your reads, broken up arbitrarily to avoid producing one huge file (it’s slightly more complicated for paired-end sequencing).
+# 
+# The first step is to trim the truly constant linker sequence from the 3’ ends of the reads. The fastx_clipper tool developed by the Hannon lab does this — I suggest a command line like the following
+# 
+# zcat /path/to/*.fastq.gz | fastx_clipper -Q33 -a TGATCGGAAGAGCACACGTC -c -v -o sample_clipped.fastq
+# 
+# Here, the “zcat” command uncompresses the FastQ files and writes the decompressed files to standard output.
+# fastx_clipper removes a fixed adapter sequence from the 3’ ends of reads, when it’s present. The -a option specifies the adapter sequence itself, -c discards sequences with no adapter sequence found at the 3’ end, and -v specifies verbose reporting of the clip statistics. The -o specifies the output file. The “-Q33” is needed for current versions of Illumina sequencing because they report a wider range of quality scores and without -Q33 the quality information in the FastQ file will be rejected.
+# 
+# The next step is to use my fastx-split tool. You can get some information about it using
+# fastx-split --help=plain
+# 
+# You need to build a “sample sheet” linking barcodes to sample names. This is just a simple text file like:
+# One,ATCGT
+# Two,AGCTA
+# and so forth, where “One”, “Two” etc. are sample names.
+# 
+# You can then run the splitting as follows:
+# fastx-split -o split -p NN -x NNNNNIIIII -s samples.csv sample_clipped.fastq
+# 
+# Here, “-o split” indicates that output files are written in a new directory called “split”.
+# 
+# The format of the linker sequences are given by “-p NN” and “-x NNNNNIIIII” which indicate that each sequence has 2 random (N) nucleotides at the start, and 5 random and 5 index (I) nucleotides at the end.
+# 
+# The “-s samples.csv” gives the name of the sample sheet file created above.
+# 
+# Finally, the input fastq file name.
+# 
+# In your output directory, you’ll have:
+# 
+# One file per sample named, e.g., “One.fastq” with the fastq sequences for that sample. The read names returned by the Illumina sequencer will be augmented with per-sample index information as well as barcode information.
+# 
+# One file per sample named, e.g., “One_stats.txt” containing a table of barcode frequencies.
+# 
+# .fastq and _stats.txt files for the “Unknown” sample comprising reads with no recognizable barcodes
+# 
+# “fates.txt” tabulating the distribution of reads to different fates.
+# 
+# Best,
+# —Nick
+# 
+# Clipping off the adaptor sequences using Nick's suggested command
+# 
+zcat *.fastq.gz | fastx_clipper -Q33 -a TGATCGGAAGAGCACACGTC -c -v -o sample_clipped.fastq
+# 
+# Clipping Adapter: TGATCGGAAGAGCACACGTC
+# Min. Length: 5
+# Non-Clipped reads - discarded.
+# Input: 90746659 reads.
+# Output: 83144748 reads.
+# discarded 3422447 too-short reads.
+# discarded 450223 adapter-only reads.
+# discarded 3385004 non-clipped reads.
+# discarded 344237 N reads.
+# mcglincy@compute1:~/NINM001/Sample_NINM01_index1$ Write failed: Broken pipe
+# 
+# TODO - talk to Nick about the error
+# Moving over samples.csv for splitting by barcode
+scp samples.csv mcglincy@compute1.ingolia-lab.org:/mnt/ingolialab/mcglincy/NINM001/Sample_NINM01_index1/
+# 
+# Splitting by barcode
+fastx-split -o split -p NN -x NNNNNIIIII -s samples.csv sample_clipped.fastq
+# 
+# ok, that seemed to work; maybe I should do some analysis on the random barcode frequency - if all barcodes are equally likely, the distribution of
+# frequencies should be flat.
+# For this I should get RStudio working in the terminal
+# I had to authenticate myself first, but should just be a matter of going to:
+# 
+# https://compute1.ingolia-lab.org:8787/
+# 
+# Did analysis of barcode frequency in RStudio
+# 
+Working from the Nat. Prot. paper:
+
+what does this do?
+
+fastq_illumina_filter --keep N -v
+
+# Hi Nick,
+
+# You can find the yeast rRNA sequence, along with bowtie1 (.ebwt) and bowtie2 (.bt2) index files on the server at
+
+# /mnt/ingolialab/ingolia/Genomes/Saccharomyces_cerevisiae/sc-rrna.fa
+
+# &c.
+
+# You can also find yeast transcriptome annotations in
+# /mnt/ingolialab/ingolia/Genomes/Saccharomyces_cerevisiae/YeastGenome/sac_cer_yassour.gtf
+# and a .bed file in
+# /mnt/ingolialab/ingolia/Genomes/Saccharomyces_cerevisiae/YeastGenome/sac_cer_yassour.bed
+
+# I prefer BED format annotations for many purposes (and the programs I write tend to use them) but since tophat requires a .gtf I tend to have matched .bed and .gtf annotations.
+
+# Best,
+# —Nick
