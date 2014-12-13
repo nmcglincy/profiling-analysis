@@ -111,3 +111,5 @@ bowtie2 -p 8 --very-sensitive --quiet --un 112A_norrna.fq -x sc-rrna -U 112A.fas
 bowtie2 -p 8 --very-sensitive --quiet --un 112B_norrna.fq -x sc-rrna -U 112B.fastq | rrna-stats -o 112B_rrna --tam --maxread 51 --lenrange 24,36 - &
 bowtie2 -p 8 --very-sensitive --quiet --un D19A_norrna.fq -x sc-rrna -U D19A.fastq | rrna-stats -o D19A_rrna --tam --maxread 51 --lenrange 24,36 - &
 bowtie2 -p 8 --very-sensitive --quiet --un D19B_norrna.fq -x sc-rrna -U D19B.fastq | rrna-stats -o D19B_rrna --tam --maxread 51 --lenrange 24,36 - & 
+# 
+# THIS WASN'T VERY SUCCESSFUL, WE EXPECT ~70% OF READS TO BE NON-RRNA, BUT I GOT ~30% READS BEING NON-RRNA. IDEALLING YOU WANT >10M READS/SAMPLE TO MAKE USEFUL CONCLUSIONS, BUT I'M COMING IN AT 3-5M READS PER SAMPLE.
