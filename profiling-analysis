@@ -82,11 +82,11 @@ fastx-split -o split -p NN -x NNNNNIIIII -s samples.csv sample_clipped.fastq
 # 
 # Did analysis of barcode frequency in RStudio
 # 
-Working from the Nat. Prot. paper:
+# Working from the Nat. Prot. paper:
 
-what does this do?
+# what does this do?
 
-fastq_illumina_filter --keep N -v
+# fastq_illumina_filter --keep N -v
 
 # Hi Nick,
 
@@ -105,3 +105,9 @@ fastq_illumina_filter --keep N -v
 
 # Best,
 # —Nick
+# 
+# ALIGNMENT TO rRNA
+bowtie2 -p 8 --very-sensitive --quiet --un 112A_norrna.fq -x sc-rrna -U 112A.fastq | rrna-stats -o 112A_rrna --tam --maxread 51 --lenrange 24,36 - &
+bowtie2 -p 8 --very-sensitive --quiet --un 112B_norrna.fq -x sc-rrna -U 112B.fastq | rrna-stats -o 112B_rrna --tam --maxread 51 --lenrange 24,36 - &
+bowtie2 -p 8 --very-sensitive --quiet --un D19A_norrna.fq -x sc-rrna -U D19A.fastq | rrna-stats -o D19A_rrna --tam --maxread 51 --lenrange 24,36 - &
+bowtie2 -p 8 --very-sensitive --quiet --un D19B_norrna.fq -x sc-rrna -U D19B.fastq | rrna-stats -o D19B_rrna --tam --maxread 51 --lenrange 24,36 - & 
