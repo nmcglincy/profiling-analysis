@@ -113,3 +113,14 @@ bowtie2 -p 8 --very-sensitive --quiet --un D19A_norrna.fq -x sc-rrna -U D19A.fas
 bowtie2 -p 8 --very-sensitive --quiet --un D19B_norrna.fq -x sc-rrna -U D19B.fastq | rrna-stats -o D19B_rrna --tam --maxread 51 --lenrange 24,36 - & 
 # 
 # THIS WASN'T VERY SUCCESSFUL, WE EXPECT ~70% OF READS TO BE NON-RRNA, BUT I GOT ~30% READS BEING NON-RRNA. IDEALLING YOU WANT >10M READS/SAMPLE TO MAKE USEFUL CONCLUSIONS, BUT I'M COMING IN AT 3-5M READS PER SAMPLE.
+# 
+# 
+# ALIGNING RRNA-DEPLETED READS TO THE YEAST GENOME USING TOPHAT2
+# USING A GTF BASED ON THE STEINMETZ DATA; CONSTRUCTING TWO VERSIONS - ONE USING THE ANNOTATIONS CONSISTENT WITH MORE "NORMAL" TRANSCRIPT STRUCTURE, AND ANOTHER WITH ALMOST EVERYTHING.
+# 
+# SHINTARO'S COMMAND
+nohup tophat --bowtie1 --no-novel-juncs --output-dir hEScon_norrna_vs_genome --GTF /mnt/sequence/ingolia/Genomes/Homo_sapiens/hg19_knownGene.gtf /mnt/sequence/ingolia/Genomes/Homo_sapiens/hg19 hEScon.norrna.fq &
+# 
+# WHAT DOES NOHUP DO?
+# PREVENTS A PROCESS FROM STOPPING WHEN YOU LOG OUT OF THE TERMINAL
+# http://en.wikipedia.org/wiki/Nohup
