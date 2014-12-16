@@ -124,3 +124,11 @@ nohup tophat --bowtie1 --no-novel-juncs --output-dir hEScon_norrna_vs_genome --G
 # WHAT DOES NOHUP DO?
 # PREVENTS A PROCESS FROM STOPPING WHEN YOU LOG OUT OF THE TERMINAL
 # http://en.wikipedia.org/wiki/Nohup
+# 
+# IT SEEMS LIKE A GOOD IDEA TO FOLLOW THE DOC'S SUGGESTION TO BUILD MY TRANSCRIPTOME INDEX USING AN INDEPENDENT TOPHAT2 COMMAND, LIKE SO:
+tophat -G known_genes.gtf \
+    --transcriptome-index=transcriptome_data/known \
+    hg19 
+# 
+# WHICH FOR ME WOULD BE:
+nohup tophat -G 
