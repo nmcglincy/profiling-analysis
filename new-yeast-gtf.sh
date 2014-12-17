@@ -22,11 +22,6 @@ scp mcglincy@compute1.ingolia-lab.org:/mnt/ingolialab/ingolia/Genomes/Saccharomy
 # 
 # GRAB mTIF TYPES INTO SEPARATE FILES USING GREP
 grep -w "Covering one intact ORF" S2_tcd_mTIFAnno.txt > covering-one-intact-orf
-
-awk '{ for (i=1; i<=6; i++) printf("%s%s", $(i), i<6 ? OFS : "\n"); }'
-
-
-
 grep -w "Intergenic transcripts" S2_tcd_mTIFAnno.txt > intergenic-trcpts
 grep -w "Overlap 3' of one ORF" S2_tcd_mTIFAnno.txt > overlap-3p-oneOrf
 grep -w "Overlap 5' of one ORF" S2_tcd_mTIFAnno.txt > overlap-5p-oneOrf
