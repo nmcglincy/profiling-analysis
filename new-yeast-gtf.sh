@@ -38,7 +38,23 @@ cat covering-one-intact-orf intergenic-trcpts overlap-5p-oneOrf overlap-3p-oneOr
 awk '{ if($5>=1) {print $0} }' mTIF-anno-vanilla | cut -f 1-5,7- > mTIF-anno-vanilla-ypd
 awk '{ if($5>=1) {print $0} }' mTIF-anno-choco | cut -f 1-5,7- > mTIF-anno-choco-ypd
 # 
-# TODO - I NOTICED THAT SOME OF THE mTIFs FROM ALL CLASSES HAVE NA AS A GENE IDENTIFIER, I'LL HAVE TO DO SOME THING ABOUT THAT.
 # TODO - LOCATION DATA IS IN THE WRONG FORMAT.
+awk -f reorder-loc.awk mTIF-anno-vanilla-ypd > mTIF-anno-vanilla-ypd1
+# 
+# THIS WILL BE 0 IS EVERYTHING WENT FINE
+awk -f loc-double-check.awk mTIF-anno-vanilla-ypd1 | grep -cw "oh shit"
+# 
+# FOR THE CHOCOLATE ANNOTATION:
+awk -f reorder-loc.awk mTIF-anno-choco-ypd > mTIF-anno-choco-ypd1
+awk -f loc-double-check.awk mTIF-anno-choco-ypd1 | grep -cw "oh shit"
+# 
+# DOUBLE DOUBLE CHECK
+wc -l mTIF-anno-choco*
+# 
+# ACTUALLY PUT INTO GTF FORMAT
+
+
+# TODO - I NOTICED THAT SOME OF THE mTIFs FROM ALL CLASSES HAVE NA AS A GENE IDENTIFIER, I'LL HAVE TO DO SOME THING ABOUT THAT.
+
 # TODO - HAVE 5PUTR & 3PUTR AS SEPARATE ANNOTATIONS IN GTF.
 # 

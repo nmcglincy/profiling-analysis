@@ -4,7 +4,7 @@
 BEGIN {OFS = "\t"}
 {
     if ( $2 == "-") {
-        print $1 $2 $4 $3 $5 $6 $7
+        print $1 OFS $2 OFS $4 OFS $3 OFS $5 OFS $6 OFS $7
     } else {
         print $0
     }
