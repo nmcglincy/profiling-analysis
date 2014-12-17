@@ -35,8 +35,8 @@ cat covering-one-intact-orf intergenic-trcpts overlap-5p-oneOrf overlap-3p-oneOr
 # ONLY TAKE mTIFs WITH SOME EXPRESSION IN THE YPD CONDITION; REMOVE FIELD WITH EXPRESSION IN YGAL CONDITION
 # CAN'T BRING MYSELF TO REMOVE EXPRESSION IN YPD CONDITION YET, MIGHT BE USEFUL LATER ON, BUT I'LL HAVE TO 
 # SEE WHETHER THERE'S A PLACE FOR IT IN THE FINAL GTF.
-awk '{ if($5>=1) {print $0} }' mTIF-anno-vanilla | cut -f 6 > mTIF-anno-vanilla-ypd
-awk '{ if($5>=1) {print $0} }' mTIF-anno-choco | cut -f 6 > mTIF-anno-choco-ypd
+awk '{ if($5>=1) {print $0} }' mTIF-anno-vanilla | cut -f 1-5,7- > mTIF-anno-vanilla-ypd
+awk '{ if($5>=1) {print $0} }' mTIF-anno-choco | cut -f 1-5,7- > mTIF-anno-choco-ypd
 # 
 # TODO - I NOTICED THAT SOME OF THE mTIFs FROM ALL CLASSES HAVE NA AS A GENE IDENTIFIER, I'LL HAVE TO DO SOME THING ABOUT THAT.
 # TODO - LOCATION DATA IS IN THE WRONG FORMAT.
