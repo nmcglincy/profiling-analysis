@@ -21,14 +21,13 @@ scp mcglincy@compute1.ingolia-lab.org:/mnt/ingolialab/ingolia/Genomes/Saccharomy
 # MANUALLY REMOVED COLUMN HEADERS TO ANOTHER FILE mTIF-anno-headers
 # 
 # GRAB mTIF TYPES INTO SEPARATE FILES USING GREP
-grep -w "Covering one intact ORF" S2_tcd_mTIFAnno.txt > covering-one-intact-orf
-grep -w "Intergenic transcripts" S2_tcd_mTIFAnno.txt > intergenic-trcpts
-grep -w "Overlap 3' of one ORF" S2_tcd_mTIFAnno.txt > overlap-3p-oneOrf
-grep -w "Overlap 5' of one ORF" S2_tcd_mTIFAnno.txt > overlap-5p-oneOrf
+grep -w "Covering one intact ORF" S2_tcd_mTIFAnno.txt | awk -f reformater.awk > covering-one-intact-orf
+grep -w "Overlap 3' of one ORF" S2_tcd_mTIFAnno.txt | awk -f reformater.awk > overlap-3p-oneOrf
+grep -w "Overlap 5' of one ORF" S2_tcd_mTIFAnno.txt | awk -f reformater.awk > overlap-5p-oneOrf
 # 
-# THE INTERGENIC TRANSCRIPTS DON'T SEEM TO HAVE ANY ID, IT WOULD BE USEFUL IF THEY DID.
-
-
+# THIS IS A SPECIAL CASE, SINCE WE NEED TO CREATE IDS FOR THE INTERGENIC TRANSCRIPTS
+grep -w "Intergenic transcripts" S2_tcd_mTIFAnno.txt | awk -f reformater-igt-tifs.awk > intergenic-trcpts
+# 
 # FUSE INTO FILES BY FLAVOUR
 cat covering-one-intact-orf intergenic-trcpts > mTIF-anno-vanilla
 cat covering-one-intact-orf intergenic-trcpts overlap-5p-oneOrf overlap-3p-oneOrf > mTIF-anno-choco
