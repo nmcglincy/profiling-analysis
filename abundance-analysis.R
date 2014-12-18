@@ -21,7 +21,7 @@ length(vanilla.coio$gene.id)
 # 
 library(ggplot2)
 ggplot(vanilla.coio,
-       aes(gene.id, log10(reads))) +
+       aes(x = gene.id, y = log10(reads))) +
   geom_boxplot() +
   theme(panel.border = element_rect(fill = NA, colour = "black"),
         axis.title.x = element_text(vjust = 0, size = 14),
