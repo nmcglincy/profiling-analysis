@@ -68,8 +68,19 @@ awk -f anno-to-gtf.awk mTIF-anno-choco-ypd1 > mTIF-choco-ypd.gtf
 # 
 # OK, AFTER ALL THE CONFUSION, I THINK THE BEST APPROACH IS TO MAKE AN EXTRA-VANILLA CONSISTING OF JUST THOSE COVERING-ONE-INTACT-ORF WITH A VALID GENE_ID 
 # 
-# MAKING GTF WITHOUT ANY NAS
-grep -wv "NA" mTIF-anno-vanilla-ypd1 | wc -l
+# MAKING GTF WITHOUT ANY NAS WITHOUT INTEGENIC TRANSCRIPTS
+grep -wv "NA" mTIF-anno-vanilla-ypd1 | head
+grep -wv "NA" mTIF-anno-vanilla-ypd1 | cut -f 7| uniq
+# 
+# THE ACTUAL COMMAND
+grep -wv "NA" mTIF-anno-vanilla-ypd1 | grep -v "int_trcpt_*" > mTIF-exVanilla-ypd1
+# 
+# DOUBLE CHECK BY GREP C COUNTING
+grep -cw "NA" mTIF-exVanilla-ypd1
+grep -c "int_trcpt_*" mTIF-exVanilla-ypd1
+# 
+# IT ALL LOOKS GOOD
+awk -f anno-to-gtf.awk mTIF-exVanilla-ypd1 > mTIF-exVanilla.gtf
 
 # TODO - HAVE 5PUTR & 3PUTR AS SEPARATE ANNOTATIONS IN GTF.
 # 
