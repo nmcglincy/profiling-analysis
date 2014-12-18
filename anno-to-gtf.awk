@@ -13,9 +13,9 @@
 BEGIN { OFS = "\t"}
 {
     if ( length($1) < 2) {
-        print "chr0" $1 OFS "steinmetz_mTIFs" OFS "exon" OFS $3 OFS $4 OFS $5 OFS $2 OFS "." OFS "gene_id  " $7 "; mTIF_type " $6
+        print "chr0" $1 OFS "steinmetz_mTIFs" OFS "exon" OFS $3 OFS $4 OFS $5 OFS $2 OFS "." OFS "gene_id  \"" $7 "\"; mTIF_type \"" $6 "\";"
     } else {
-        print "chr" $1  OFS "steinmetz_mTIFs" OFS "exon" OFS $3 OFS $4 OFS $5 OFS $2 OFS "." OFS "gene_id  " $7 "; mTIF_type " $6
+        print "chr" $1  OFS "steinmetz_mTIFs" OFS "exon" OFS $3 OFS $4 OFS $5 OFS $2 OFS "." OFS "gene_id  \"" $7 "\"; mTIF_type \"" $6 "\";"
     }
 #    print "steinmetz_mTIFs" OFS "exon" OFS $3 OFS $4 OFS $5 OFS $2 OFS "." OFS "gene_id  " $7 "; mTIF_type " $6
 }

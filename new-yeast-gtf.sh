@@ -52,7 +52,8 @@ awk -f loc-double-check.awk mTIF-anno-choco-ypd1 | grep -cw "oh shit"
 wc -l mTIF-anno-choco*
 # 
 # ACTUALLY PUT INTO GTF FORMAT
-
+awk -f anno-to-gtf.awk mTIF-anno-vanilla-ypd1 > mTIF-vanilla-ypd.gtf
+awk -f anno-to-gtf.awk mTIF-anno-choco-ypd1 > mTIF-choco-ypd.gtf
 
 # TODO - I NOTICED THAT SOME OF THE mTIFs FROM ALL CLASSES HAVE NA AS A GENE IDENTIFIER, I'LL HAVE TO DO SOME THING ABOUT THAT.
 
