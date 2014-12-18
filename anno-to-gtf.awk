@@ -17,5 +17,5 @@ BEGIN { OFS = "\t"}
     } else {
         print "chr" $1
     };
-    print "steinmetz_mTIFs" OFS
+    print "steinmetz_mTIFs" OFS "exon" OFS $3 OFS $4 OFS $5 OFS $2
 }
