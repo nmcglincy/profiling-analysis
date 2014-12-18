@@ -65,8 +65,11 @@ sed -e 's/[[:<:]]chr1[[:>:]]/chrI/g' -e 's/[[:<:]]chr2[[:>:]]/chrII/g' -e 's/[[:
 # ACTUALLY PUT INTO GTF FORMAT
 awk -f anno-to-gtf.awk mTIF-anno-vanilla-ypd1 > mTIF-vanilla-ypd.gtf
 awk -f anno-to-gtf.awk mTIF-anno-choco-ypd1 > mTIF-choco-ypd.gtf
-
-
+# 
+# OK, AFTER ALL THE CONFUSION, I THINK THE BEST APPROACH IS TO MAKE AN EXTRA-VANILLA CONSISTING OF JUST THOSE COVERING-ONE-INTACT-ORF WITH A VALID GENE_ID 
+# 
+# MAKING GTF WITHOUT ANY NAS
+grep -wv "NA" mTIF-anno-vanilla-ypd1 | wc -l
 
 # TODO - HAVE 5PUTR & 3PUTR AS SEPARATE ANNOTATIONS IN GTF.
 # 
