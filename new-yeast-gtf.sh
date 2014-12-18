@@ -51,11 +51,22 @@ awk -f loc-double-check.awk mTIF-anno-choco-ypd1 | grep -cw "oh shit"
 # DOUBLE DOUBLE CHECK
 wc -l mTIF-anno-choco*
 # 
+# TODO - I NOTICED THAT SOME OF THE mTIFs FROM ALL CLASSES HAVE NA AS A GENE IDENTIFIER, I'LL HAVE TO DO SOME THING ABOUT THAT.
+grep -wc "NA" mTIF-anno-vanilla-ypd1
+# 6279 ENTRIES, SEEM TO BE EXCLUSIVELY FROM COVERING-ONE-INTACT-ORF CLASS
+# PUT IT INTO BED FORMAT
+grep -w "NA" mTIF-anno-vanilla-ypd1 > orphans
+awk '{print "chr" $1 "\t" $3 "\t" $4}' orphans > orphans.bed
+# 
+# GROAN, THE CHR NUMBERS ARE SPECIFIED IN LATIN NUMERAL RATHER THAN NUMBERS, SO I'M GETTING NO OVERLAP
+sed -e 's/chr1/chrI/g' -e 's/chr2/chrII/g' -e 's/chr3/chrIII/g' -e 's/chr4/chrIV/g' -e 's/chr5/chrV/g' -e 's/chr6/chrVI/g' -e 's/chr7/chrVII/g' -e 's/chr8/chrVIII/g' -e 's/chr9/chrIX/g' -e 's/chr10/chrX/g' -e 's/chr11/chrXI/g' -e 's/chr12/chrXII/g' -e 's/chr13/chrXIII/g' -e 's/chr14/chrXIV/g' -e 's/chr15/chrXV/g' -e 's/chr16/chrXVI/g' orphans.bed > orphansRoman.bed
+# REPEAT GALAXY ANALYSIS, WOULD BE COOL IF I COULD LEARN HOW TO DO THIS AT THE COMMAND LINE OR IN R
+# 
 # ACTUALLY PUT INTO GTF FORMAT
 awk -f anno-to-gtf.awk mTIF-anno-vanilla-ypd1 > mTIF-vanilla-ypd.gtf
 awk -f anno-to-gtf.awk mTIF-anno-choco-ypd1 > mTIF-choco-ypd.gtf
 
-# TODO - I NOTICED THAT SOME OF THE mTIFs FROM ALL CLASSES HAVE NA AS A GENE IDENTIFIER, I'LL HAVE TO DO SOME THING ABOUT THAT.
+
 
 # TODO - HAVE 5PUTR & 3PUTR AS SEPARATE ANNOTATIONS IN GTF.
 # 
