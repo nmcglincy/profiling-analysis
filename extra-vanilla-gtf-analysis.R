@@ -12,7 +12,7 @@ str(as.list(exVanilla))
 library(rtracklayer)
 xv.data = import.bed(con = "mTIF-exVanilla.bed",
                      asRangedData = FALSE,
-                     genome = "saccCer3")
+                     genome = "sacCer3")
 xv.data
 ?split
 foo = split(xv.data, mcols(xv.data)$name)
