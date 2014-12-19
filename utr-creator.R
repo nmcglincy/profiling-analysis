@@ -11,7 +11,7 @@ UtrCreator = function(x) {
     x = unique(c(x, disjoin(x)))
     names(x) = c("exon", "CDS", "5pUTR", "3pUTR")
   } else if ( length(disjoin(x)) == 2 ) {
-    if ( precede(disjoin(x)[2], disjoin(x)[1]) == "NA" ) {
+    if ( follow(disjoin(x)[2], disjoin(x)[1]) == 1 ) {
       x = unique(c(x, disjoin(x)))
       names(x) = c("exon", "CDS", "3pUTR")
     } else {

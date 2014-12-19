@@ -145,14 +145,21 @@ gr.co3 = GRanges(seqnames = Rle(c("chr3"), c(2)),
                                   end = c(10, 10),
                                   names = c("exon", "CDS")),
                  strand = Rle(strand("+")))
+gr.co4 = GRanges(seqnames = Rle(c("chr1"), c(2)),
+                 ranges = IRanges(start = c(1, 3), 
+                                  end = c(10, 10),
+                                  names = c("exon", "CDS")),
+                 strand = Rle(strand("+")))
+
+
 
 gr.list = GRangesList(gr.co1, gr.co2, gr.co3)
 gr.list
 
 source("utr-creator.R")
 
-UtrCreator(gr.co2)
 UtrCreator(gr.co1)
+UtrCreator(gr.co2)
 UtrCreator(gr.co3)
 
 lapply(gr.list, UtrCreator)
@@ -163,8 +170,8 @@ start(disjoin(gr.co1))
 strand(gr.co1) == "+"
 ?nearest
 disjoin(gr.co1)[2]
-precede(disjoin(gr.co1)[2], disjoin(gr.co1)[1])
-follow(disjoin(gr.co1)[2], disjoin(gr.co1)[1])
+precede(disjoin(gr.co1)[2], disjoin(gr.co1)[1]) == 1
+follow(disjoin(gr.co1)[2], disjoin(gr.co1)[1]) == NA
 
 
 
