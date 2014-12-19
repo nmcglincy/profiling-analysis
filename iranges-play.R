@@ -198,22 +198,22 @@ is.na(precede( setdiff(disjoin(gr.co4), gr.co4["CDS"]), gr.co4["CDS"] ))
 # 2. WILL IT BE CONFUSED BY MULTI-EXON GENES
 # 
 # 1
-gr.co1 = GRanges(seqnames = Rle(c("chr1"), c(2)),
+gr.co5 = GRanges(seqnames = Rle(c("chr1"), c(2)),
                  ranges = IRanges(start = c(1, 1), 
                                   end = c(10, 8),
                                   names = c("exon", "CDS")),
                  strand = Rle(strand("-")))
-gr.co2 = GRanges(seqnames = Rle(c("chr2"), c(2)),
+gr.co6 = GRanges(seqnames = Rle(c("chr2"), c(2)),
                  ranges = IRanges(start = c(1, 3), 
                                   end = c(10, 8),
                                   names = c("exon", "CDS")),
                  strand = Rle(strand("-")))
-gr.co3 = GRanges(seqnames = Rle(c("chr3"), c(2)),
+gr.co7 = GRanges(seqnames = Rle(c("chr3"), c(2)),
                  ranges = IRanges(start = c(1, 1), 
                                   end = c(10, 10),
                                   names = c("exon", "CDS")),
                  strand = Rle(strand("-")))
-gr.co4 = GRanges(seqnames = Rle(c("chr1"), c(2)),
+gr.co8 = GRanges(seqnames = Rle(c("chr1"), c(2)),
                  ranges = IRanges(start = c(1, 3), 
                                   end = c(10, 10),
                                   names = c("exon", "CDS")),
@@ -221,7 +221,7 @@ gr.co4 = GRanges(seqnames = Rle(c("chr1"), c(2)),
 
 
 
-gr.list = GRangesList(gr.co1, gr.co2, gr.co3, gr.co4)
+gr.list = GRangesList(gr.co1, gr.co2, gr.co3, gr.co4, gr.co5, gr.co6, gr.co7, gr.co8)
 gr.list
 
 source("utr-creator.R")
@@ -231,7 +231,9 @@ UtrCreator(gr.co2)
 UtrCreator(gr.co3)
 UtrCreator(gr.co4)
 lapply(gr.list, UtrCreator)
-
-
-
+# 
+# LOL, ACTUALLY THE NORMAL CASE WAS THE PROBLEM
+strand(gr.co1) == "-"
+unique(strand(gr.co1)) == "-"
+# THAT FIX WORKS 
 
