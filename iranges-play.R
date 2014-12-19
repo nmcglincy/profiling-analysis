@@ -129,3 +129,42 @@ chr06	bed-to-gtf	CDS	63016	63859	0.0	-	.	gene_id "YFL034C-B"; transcript_id "YFL
 
 # DOESN'T WORK ON ASYMMETRIC CASES, NEED TO FIND SOME FUNCTION TO ASSESS THIS
 foo = unique(c(gr.co1, disjoin(gr.co1)))
+
+gr.co1 = GRanges(seqnames = Rle(c("chr1"), c(2)),
+                 ranges = IRanges(start = c(1, 1), 
+                                  end = c(10, 8),
+                                  names = c("exon", "CDS")),
+                 strand = Rle(strand("+")))
+gr.co2 = GRanges(seqnames = Rle(c("chr2"), c(2)),
+                 ranges = IRanges(start = c(1, 3), 
+                                  end = c(10, 8),
+                                  names = c("exon", "CDS")),
+                 strand = Rle(strand("+")))
+gr.co3 = GRanges(seqnames = Rle(c("chr3"), c(2)),
+                 ranges = IRanges(start = c(1, 1), 
+                                  end = c(10, 10),
+                                  names = c("exon", "CDS")),
+                 strand = Rle(strand("+")))
+
+gr.list = GRangesList(gr.co1, gr.co2, gr.co3)
+gr.list
+
+source("utr-creator.R")
+
+UtrCreator(gr.co2)
+UtrCreator(gr.co1)
+UtrCreator(gr.co3)
+
+lapply(gr.list, UtrCreator)
+
+start(gr.co1)
+disjoin(gr.co1)
+start(disjoin(gr.co1))
+strand(gr.co1) == "+"
+?nearest
+disjoin(gr.co1)[2]
+precede(disjoin(gr.co1)[2], disjoin(gr.co1)[1])
+follow(disjoin(gr.co1)[2], disjoin(gr.co1)[1])
+
+
+
