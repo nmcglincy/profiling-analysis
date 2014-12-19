@@ -153,7 +153,7 @@ gr.co4 = GRanges(seqnames = Rle(c("chr1"), c(2)),
 
 
 
-gr.list = GRangesList(gr.co1, gr.co2, gr.co3)
+gr.list = GRangesList(gr.co1, gr.co2, gr.co3, gr.co4)
 gr.list
 
 source("utr-creator.R")
@@ -161,7 +161,7 @@ source("utr-creator.R")
 UtrCreator(gr.co1)
 UtrCreator(gr.co2)
 UtrCreator(gr.co3)
-
+UtrCreator(gr.co4)
 lapply(gr.list, UtrCreator)
 
 start(gr.co1)
@@ -172,6 +172,66 @@ strand(gr.co1) == "+"
 disjoin(gr.co1)[2]
 precede(disjoin(gr.co1)[2], disjoin(gr.co1)[1]) == 1
 follow(disjoin(gr.co1)[2], disjoin(gr.co1)[1]) == NA
+
+if (follow(disjoin(gr.co4)[2], disjoin(gr.co4)[1]) == 1)
+gr.co4["CDS"]
+setdiff(disjoin(gr.co4), gr.co4["CDS"])
+setdiff(disjoin(gr.co1), gr.co1["CDS"])
+precede( setdiff(disjoin(gr.co4), gr.co4["CDS"]), gr.co4["CDS"] ) == 1
+follow( setdiff(disjoin(gr.co4), gr.co4["CDS"]), gr.co4["CDS"] ) == 1
+foo = precede( setdiff(disjoin(gr.co1), gr.co1["CDS"]), gr.co1["CDS"] )
+foo = as.character(foo)
+class(foo)
+
+as.character(precede( setdiff(disjoin(gr.co1), gr.co1["CDS"]), gr.co1["CDS"] )) == "NA"
+foo = as.character(precede( setdiff(disjoin(gr.co1), gr.co1["CDS"]), gr.co1["CDS"] ))
+is.na(foo)
+foo = as.character(precede( setdiff(disjoin(gr.co1), gr.co1["CDS"]), gr.co1["CDS"] ))
+is.na(precede( setdiff(disjoin(gr.co1), gr.co1["CDS"]), gr.co1["CDS"] ))
+# [1] TRUE
+is.na(precede( setdiff(disjoin(gr.co4), gr.co4["CDS"]), gr.co4["CDS"] ))
+# [1] FALSE
+
+# 
+# TWO MORE EDGE CASES I CAN THINK OF:
+# 1. HOW WILL PRECEDE/FOLLOW WORK ON THE NEGATIVE STRAND
+# 2. WILL IT BE CONFUSED BY MULTI-EXON GENES
+# 
+# 1
+gr.co1 = GRanges(seqnames = Rle(c("chr1"), c(2)),
+                 ranges = IRanges(start = c(1, 1), 
+                                  end = c(10, 8),
+                                  names = c("exon", "CDS")),
+                 strand = Rle(strand("-")))
+gr.co2 = GRanges(seqnames = Rle(c("chr2"), c(2)),
+                 ranges = IRanges(start = c(1, 3), 
+                                  end = c(10, 8),
+                                  names = c("exon", "CDS")),
+                 strand = Rle(strand("-")))
+gr.co3 = GRanges(seqnames = Rle(c("chr3"), c(2)),
+                 ranges = IRanges(start = c(1, 1), 
+                                  end = c(10, 10),
+                                  names = c("exon", "CDS")),
+                 strand = Rle(strand("-")))
+gr.co4 = GRanges(seqnames = Rle(c("chr1"), c(2)),
+                 ranges = IRanges(start = c(1, 3), 
+                                  end = c(10, 10),
+                                  names = c("exon", "CDS")),
+                 strand = Rle(strand("-")))
+
+
+
+gr.list = GRangesList(gr.co1, gr.co2, gr.co3, gr.co4)
+gr.list
+
+source("utr-creator.R")
+
+UtrCreator(gr.co1)
+UtrCreator(gr.co2)
+UtrCreator(gr.co3)
+UtrCreator(gr.co4)
+lapply(gr.list, UtrCreator)
+
 
 
 
