@@ -221,7 +221,7 @@ gr.co8 = GRanges(seqnames = Rle(c("chr1"), c(2)),
 
 
 
-gr.list = GRangesList(gr.co1, gr.co2, gr.co3, gr.co4, gr.co5, gr.co6, gr.co7, gr.co8)
+gr.list = GRangesList(gr.co1, gr.co2, gr.co3, gr.co4, gr.co5, gr.co6, gr.co7, gr.co8, gr.co9)
 gr.list
 
 source("utr-creator.R")
@@ -236,4 +236,18 @@ lapply(gr.list, UtrCreator)
 strand(gr.co1) == "-"
 unique(strand(gr.co1)) == "-"
 # THAT FIX WORKS 
+# 
+# MULTI-EXON CASE
+gr.co9 = GRanges(seqnames = Rle(c("chr2"), c(6)),
+                 ranges = IRanges(start = c(10, 40, 70, 10, 40, 70), 
+                                  end = c(30, 60, 100, 30, 60, 90),
+                                  names = rep(c("exon", "CDS"), each = 3)),
+                 strand = Rle(strand("+")))
+gr.co9
+UtrCreator(gr.co9)
 
+disjoin(gr.co9)
+gr.co9[names(gr.co9) == "CDS"]
+gr.co9["CDS"]
+names(gr.co9) == "CDS"
+c(gr.co9, setdiff(disjoin(gr.co9), gr.co9[names(gr.co9) == "CDS"]))
