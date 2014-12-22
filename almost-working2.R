@@ -30,6 +30,12 @@ gtf.l[[6696]]
 UtrCreator(gtf.l[[6696]])
 # THIS SEEMS TO WORK FINE, SO IT MUST BE FROM ONE OF THE MULTI-EXON CASES
 which(elementLengths(disjoin(gtf.l)) > 3)
+gtf.l[[6663]]
+# THIS CASE HAS BOTH UTRS
+UtrCreator(gtf.l[[6663]])
+# THAT WORKED FINE
+UtrCreator(gtf.l[[103]])
+
 
 
 

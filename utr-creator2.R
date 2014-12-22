@@ -7,7 +7,7 @@ UtrCreator = function(x) {
 # 3. A UTR AT ONE END BUT NOT THE OTHER - LABEL NEEDS TO KNOW WHICH END
 # 
 # NOW ALSO WORKS FOR MULTI-EXON GENES AND ALL EXAMPLES ON NEGATIVE STRAND.
-  if ( length(disjoin(x)) == 1 ) {
+  if ( length(disjoin(x)) == length(x)/2 ) {
     foo = x 
     mcols(foo) = NULL
     x = foo
@@ -28,7 +28,9 @@ UtrCreator = function(x) {
     }
   } else if ( length(disjoin(x)) > 3 ) {
     x = c(x, setdiff(disjoin(x), x[names(x) == "CDS"]), ignore.mcols = TRUE)
-    if ( length(setdiff(disjoin(x), x[names(x) == "CDS"])) == 2) {
+    if (length(setdiff(disjoin(x), x[names(x) == "CDS"])) == 0) {
+      x = x
+    } else if ( length(setdiff(disjoin(x), x[names(x) == "CDS"])) == 2) {
       if ( unique(strand(x)) == "+" ) {
         names(x) = c(names(x)[1:(length(names(x))-2)], "5pUTR", "3pUTR")
       } else {
