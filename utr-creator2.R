@@ -1,12 +1,6 @@
 UtrCreator = function(x) {
   require(GenomicRanges)
   require(GenomicFeatures)
-# THREE CASES:
-# 1. TWO UTRS, ONE AT EITHER END - MOST COMMON
-# 2. NO UTRS
-# 3. A UTR AT ONE END BUT NOT THE OTHER - LABEL NEEDS TO KNOW WHICH END
-# 
-# NOW ALSO WORKS FOR MULTI-EXON GENES AND ALL EXAMPLES ON NEGATIVE STRAND.
   if ( length(disjoin(x)) == length(x)/2 ) {
     foo = x 
     mcols(foo) = NULL
@@ -47,7 +41,3 @@ UtrCreator = function(x) {
   }
   return(x)
 }
-# THIS STILL THROWS THE BELOW ERROR ON THE REAL THING:
-# Error in `unsafe.names<-`(`*tmp*`, value = c("exon", "CDS", "3pUTR")) : 
-#   too many names
-# IMPLICATES LINE 24 & LINE 39 AS BEING WRONG SOMEHOW.
