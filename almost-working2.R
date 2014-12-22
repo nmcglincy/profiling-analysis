@@ -56,8 +56,9 @@ length(disjoin(gtf.l[[60]])) == length(gtf.l[[60]])/2
 # OK, THINK I FIXED THIS
 UtrCreator(gtf.l[[60]])
 # WORKS!
-
-
+fooTastic = lapply(gtf.l, UtrCreator)
+# SANITY CHECK GRAPH
+plot(elementLengths(gtf.l), elementLengths(fooTastic))
 
 UtrCreator(gtf.l[[5188]])
 disjoin(gtf.l[[5188]])
