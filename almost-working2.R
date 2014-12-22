@@ -21,45 +21,16 @@ abline(a = 0, b = 1, col = "red")
 dev.off()
 # 
 # LOOK-SEE
-head(gtf.l.utrs)
-head(unlist(gtf.l.utrs))
-foo = unlist(gtf.l.utrs)
-head(foo)
-class(foo)
-class(gtf.l.utrs)
-mcols(gtf.l.utrs)$gene.id = names(gtf.l.utrs)
-names(gtf.l.utrs)
-foo = lapply(gtf.l.utrs, as.data.frame)
-names(gtf.l.utrs[[1]])
 library(plyr)
-foo = ldply(gtf.l.utrs)
-
-foo = gtf.l.utrs[[1]]
-foo
-class(foo)
-as.data.frame(foo)
-seqnames(foo)
-row.names(foo)
-names(foo)
-foo$type = names(foo)
-foo
-as.data.frame(foo, row.names = NULL)
-bar = endoapply(gtf.l.utrs, function(x) {mcols(x)[,"type"] = names(x)})
-head(bar)
-str(bar)
-
-length(foo)
-length(gtf.l.utrs)
-
 for (i in 1:length(gtf.l.utrs)) {
   mcols(gtf.l.utrs[[i]])[,"type"] = names(gtf.l.utrs[[i]])
   mcols(gtf.l.utrs[[i]])[,"gene"] = names(gtf.l.utrs)[[i]]
 }
-
-names(gtf.l.utrs)
-
-mcols(gtf.l.utrs[[1]])[,"type"] = names(gtf.l.utrs[[1]])
-mcols(gtf.l.utrs[[1]])[,"gene"] = names(gtf.l.utrs)[[1]]
-# OK THESE WORK
-gtf.l.utrs[[1]]
 head(gtf.l.utrs)
+gtf.l.utrs.df = lapply(gtf.l.utrs, as.data.frame, row.names = NULL)
+head(gtf.l.utrs.df)
+pre.gtf.df = ldply(gtf.l.utrs.df)
+pre.gtf.df = pre.gtf.df[,-1]
+head(pre.gtf.df)
+
+
