@@ -32,5 +32,19 @@ head(gtf.l.utrs.df)
 pre.gtf.df = ldply(gtf.l.utrs.df)
 pre.gtf.df = pre.gtf.df[,-1]
 head(pre.gtf.df)
-
-
+# from = rep("utr-analysis", nrow(pre.gtf.df))
+# score = rep(0.0, nrow(pre.gtf.df))
+# phase = rep(".", nrow(pre.gtf.df))
+write.table(pre.gtf.df, 
+            file = "pre-gtf",
+            sep = "\t",
+            col.names = FALSE,
+            row.names = FALSE,
+            quote = FALSE)
+#
+# FINAL FORMATTING VIA AWK
+# GETTING THE FORMATTING RIGHT
+# awk 'BEGIN{ OFS = "\t" } { print $1, "utr-analysis", $6, $2, $3, "0.0", $5, ".", $7 " " $8 " " $9 " " $10}' pre-gtf | head
+#
+# THE ACTUAL PRINTING
+# awk 'BEGIN{ OFS = "\t" } { print $1, "utr-analysis", $6, $2, $3, "0.0", $5, ".", $7 " " $8 " " $9 " " $10}' pre-gtf > sac_cer_yassour_utr.gtf
