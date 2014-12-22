@@ -131,4 +131,6 @@ tophat -G known_genes.gtf \
     hg19 
 # 
 # WHICH FOR ME WOULD BE:
-nohup tophat -G 
+nohup tophat -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known saccharomyces_cerevisiae
+#
+# THE ACTUAL ALIGNMENTS
