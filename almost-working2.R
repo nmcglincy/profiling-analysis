@@ -35,11 +35,35 @@ gtf.l[[6663]]
 UtrCreator(gtf.l[[6663]])
 # THAT WORKED FINE
 UtrCreator(gtf.l[[103]])
+# THIS FAILS, BUT FOR A DIFFERENT REASON
+disjoin(gtf.l[[103]])
+# FIXED THIS, BUT IT'S STILL NOT WORKING
+odd.ones = which(elementLengths(disjoin(gtf.l)) > 3)
+is.vector(odd.ones)
+for (i in 1:length(gtf.l)) {
+  foo = UtrCreator(gtf.l[[i]])
+  print(i)
+  print(foo)
+}
+UtrCreator(gtf.l[[59]])
+UtrCreator(gtf.l[[60]])
+# NARROWED THE PROBLEM TO INSTANCE 60
+gtf.l[[60]]
+
+disjoin(gtf.l[[60]])
+length(gtf.l[[60]])
+length(disjoin(gtf.l[[60]])) == length(gtf.l[[60]])/2
+# OK, THINK I FIXED THIS
+UtrCreator(gtf.l[[60]])
+# WORKS!
 
 
 
+UtrCreator(gtf.l[[5188]])
+disjoin(gtf.l[[5188]])
 
-foo = endoapply(gtf.l, UtrCreator)
+endoapply(gtf.l, UtrCreator)
+
 # UtrCreator(gtf.l[[1]])
 # gtf.l[["gene_id \"YPL038W-A\"; transcript_id \"YPL038W-A\";"]]
 # length(gtf.l)
