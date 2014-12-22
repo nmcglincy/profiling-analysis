@@ -58,7 +58,10 @@ fooTastic = mclapply(gtf.l, UtrCreator, mc.cores = 2)
 # # WORKS!
 # fooTastic = lapply(gtf.l, UtrCreator)
 # SANITY CHECK GRAPH
+png("sanity-check.png")
 plot(elementLengths(gtf.l), elementLengths(fooTastic))
+abline(a = 0, b = 1, col = "red")
+dev.off()
 
 # UtrCreator(gtf.l[[5188]])
 # disjoin(gtf.l[[5188]])
