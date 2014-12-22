@@ -134,3 +134,26 @@ tophat -G known_genes.gtf \
 nohup tophat -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known saccharomyces_cerevisiae
 #
 # THE ACTUAL ALIGNMENTS
+
+tophat -o 112A_norrna_v_genome -p4 --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A_norrna.fq &
+
+# [2014-12-22 14:49:36] Beginning TopHat run (v2.0.10)
+# -----------------------------------------------
+# [2014-12-22 14:49:36] Checking for Bowtie
+# 		  Bowtie version:	 2.1.0.0
+# [2014-12-22 14:49:36] Checking for Samtools
+# 		Samtools version:	 0.1.19.0
+# [2014-12-22 14:49:36] Checking for Bowtie index files (transcriptome)..
+# [2014-12-22 14:49:36] Checking for Bowtie index files (genome)..
+# [2014-12-22 14:49:36] Checking for reference FASTA file
+# 	Warning: Could not find FASTA file saccharomyces_cerevisiae.fa
+# [2014-12-22 14:49:36] Reconstituting reference FASTA file from Bowtie index
+#   Executing: /mnt/ingolialab/linux-x86_64/bin/bowtie2-inspect saccharomyces_cerevisiae > 112A_norrna_v_genome/tmp/saccharomyces_cerevisiae.fa
+# [2014-12-22 14:49:37] Generating SAM header for saccharomyces_cerevisiae
+# [2014-12-22 14:49:37] Reading known junctions from GTF file
+# [2014-12-22 14:49:37] Pre-filtering multi-mapped left reads
+# [2014-12-22 14:49:37] Mapping 112A_norrna to genome saccharomyces_cerevisiae with Bowtie2 
+# [2014-12-22 14:49:38] Preparing reads
+# 	[FAILED]
+# Error running 'prep_reads'
+# Error: qual length (91) differs from seq length (90) for fastq record !
