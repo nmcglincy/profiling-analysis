@@ -169,6 +169,36 @@ tophat -o 112A_v_genome -p4 --solexa1.3-quals --no-novel-juncs -G sac_cer_yassou
 # 	[FAILED]
 # Error running 'prep_reads'
 # terminate called after throwing an instance of 'int'
+# 
+# mcglincy@compute1:~/NINM001/Sample_NINM01_index1/split/112A_v_genome/logs$ more prep_reads.log
+# prep_reads v2.0.9 (3067M)
+# ---------------------------
+# Saw ASCII character 61 but expected 64-based Phred qual.
+# Try not specifying --solexa1.3-quals/--phred64-quals.
+# terminate called after throwing an instance of 'int'
+
+tophat -o 112A_v_genome -p4 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A.fastq &
+# THIS IS STILL THINKING...
+# THIS WORKED, REPEAT FOR OTHER SAMPLES
+tophat -o 112B_v_genome -p8 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112B.fastq &
+tophat -o D19A_v_genome -p8 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae D19A.fastq &
+tophat -o D19B_v_genome -p8 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae D19B.fastq &
+# 
+# BELOW POINT MIGHT BE WORTH BARING IN MIND
+# 
+# [2014-12-22 17:40:40] Resuming TopHat pipeline with unmapped reads
+# Warning: you have only one segment per read.
+# 	If the read length is greater than or equal to 45bp,
+# 	we strongly recommend that you decrease --segment-length to about half the read length because TopHat will work better with multiple segments
+
+
+# 
+tophat -o 112A_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A_norrna.fq &
+
+# THIS DIDN'T WORK
+# prep_reads v2.0.9 (3067M)
+# ---------------------------
+# Error: qual length (91) differs from seq length (90) for fastq record !
 
 # needs bowtie1 index
 
