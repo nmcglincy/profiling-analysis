@@ -135,7 +135,42 @@ nohup tophat -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data
 #
 # THE ACTUAL ALIGNMENTS
 
-tophat -o 112A_norrna_v_genome -p4 --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A_norrna.fq &
+tophat -o 112A_norrna_v_genome -p4 --solexa1.3-quals --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A_norrna.fq &
+
+tophat -o 112B_norrna_v_genome -p4 --solexa1.3-quals --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112B_norrna.fq &
+
+tophat -o D19A_norrna_v_genome -p4 --solexa1.3-quals --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae D19A_norrna.fq &
+
+tophat -o D19B_norrna_v_genome -p4 --solexa1.3-quals --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae D19B_norrna.fq &
+
+# D19B read2 name didn't start with an @, but it did in the fastq prior to bowtie2 so...
+# I WONDER IF RUNNING IT ON THE READS WITHOUT RRNA DEPLETION WOULD MAKE ANY DIFFERENCE
+
+tophat -o 112A_v_genome -p4 --solexa1.3-quals --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A.fastq &
+
+# NOPE
+# [2014-12-22 17:03:45] Beginning TopHat run (v2.0.10)
+# -----------------------------------------------
+# [2014-12-22 17:03:45] Checking for Bowtie
+# 		  Bowtie version:	 2.1.0.0
+# [2014-12-22 17:03:45] Checking for Samtools
+# 		Samtools version:	 0.1.19.0
+# [2014-12-22 17:03:45] Checking for Bowtie index files (transcriptome)..
+# [2014-12-22 17:03:45] Checking for Bowtie index files (genome)..
+# [2014-12-22 17:03:45] Checking for reference FASTA file
+# 	Warning: Could not find FASTA file saccharomyces_cerevisiae.fa
+# [2014-12-22 17:03:45] Reconstituting reference FASTA file from Bowtie index
+#   Executing: /mnt/ingolialab/linux-x86_64/bin/bowtie2-inspect saccharomyces_cerevisiae > 112A_v_genome/tmp/saccharomyces_cerevisiae.fa
+# [2014-12-22 17:03:46] Generating SAM header for saccharomyces_cerevisiae
+# [2014-12-22 17:03:46] Reading known junctions from GTF file
+# [2014-12-22 17:03:46] Pre-filtering multi-mapped left reads
+# [2014-12-22 17:03:46] Mapping 112A to genome saccharomyces_cerevisiae with Bowtie2 
+# [2014-12-22 17:03:46] Preparing reads
+# 	[FAILED]
+# Error running 'prep_reads'
+# terminate called after throwing an instance of 'int'
+
+# needs bowtie1 index
 
 # [2014-12-22 14:49:36] Beginning TopHat run (v2.0.10)
 # -----------------------------------------------
