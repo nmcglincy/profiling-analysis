@@ -190,8 +190,6 @@ tophat -o D19B_v_genome -p8 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transc
 # Warning: you have only one segment per read.
 # 	If the read length is greater than or equal to 45bp,
 # 	we strongly recommend that you decrease --segment-length to about half the read length because TopHat will work better with multiple segments
-
-
 # 
 tophat -o 112A_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A_norrna.fq &
 
@@ -224,4 +222,13 @@ tophat -o 112A_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour_utr.gtf -
 # Error: qual length (91) differs from seq length (90) for fastq record !
 # 
 # SAMTOOLS PROCESSING OUTLINED IN NATURE PROTOCOLS PAPER TO EXTRACT PERFECT-MATCH ALIGNMENTS FROM TOPHAT
-
+samtools view -h 112A_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > 112A_v_genome.bam &
+samtools view -h 112B_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > 112B_v_genome.bam &
+samtools view -h D19A_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > D19A_v_genome.bam &
+samtools view -h D19B_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > D19B_v_genome.bam &
+# 
+# INDEXED THEM AS SHINTARO DOES FOR IGV
+samtools index 112A_v_genome.bam &
+samtools index 112B_v_genome.bam &
+samtools index D19A_v_genome.bam &
+samtools index D19B_v_genome.bam &

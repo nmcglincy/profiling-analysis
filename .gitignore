@@ -44,3 +44,7 @@ mTIF-exVanilla-ypd1
 *.png
 
 pre-gtf
+
+*.bam
+
+*.bai
