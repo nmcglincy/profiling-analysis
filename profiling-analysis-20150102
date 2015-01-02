@@ -10,7 +10,8 @@
 # Splitting by barcode, designate a new folder for this new split
 fastx-split -o split2 -p NN -x NNNNNIIIII -m14 -s samples.csv sample_clipped.fastq
 # 
-# 
+# MOVE REQUIRED ANNOTATION INTO NEW FOLDER
+cp *.bt2 ../split2/
 # 
 # ALIGNMENT TO rRNA
 bowtie2 -p 8 --very-sensitive --quiet --un 112A_norrna.fq -x sc-rrna -U 112A.fastq | rrna-stats -o 112A_rrna --tam --maxread 51 --lenrange 24,36 - &
