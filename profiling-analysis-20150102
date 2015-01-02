@@ -1,0 +1,140 @@
+# 20150102
+# WHEN I RAN THE ANALYSIS BEFORE, THE TOPHAT ALIGNMENT FAILED, AND WE WEREN'T SO SURE WHAT THE ERROR MEANT.
+# NICK THOUGHT IT HAD SOMETHING TO DO WITH SHORT SEQUENCES, AND THAT REMOVING THEM AT THE FASTX-SPLIT STAGE
+# WOULD FIX IT.
+# 
+# NICK'S EMAIL:
+# Thanks for sending those along. I think we can actually blame this in part on bowtie — probably due to weird problems arising when it gets 1-base-long reads as input. 
+# One possible solution would be to use the “-m/--min-insert” option I included in fastx-split to throw out stuff that’s so short as to be uninteresting in any case — I’d guess that 16 bases is a good cutoff for this, though Rachel Green does see interesting stuff that’s this size or smaller, so maybe 14 bases would be good. You would do this by adding “-m14” or “--min-insert=14” to your fastx-split run (then, sadly, re-running the bowtie against rRNA and then the TopHat).
+# 
+# Splitting by barcode, designate a new folder for this new split
+fastx-split -o split2 -p NN -x NNNNNIIIII -m14 -s samples.csv sample_clipped.fastq
+# 
+# 
+# 
+# ALIGNMENT TO rRNA
+bowtie2 -p 8 --very-sensitive --quiet --un 112A_norrna.fq -x sc-rrna -U 112A.fastq | rrna-stats -o 112A_rrna --tam --maxread 51 --lenrange 24,36 - &
+bowtie2 -p 8 --very-sensitive --quiet --un 112B_norrna.fq -x sc-rrna -U 112B.fastq | rrna-stats -o 112B_rrna --tam --maxread 51 --lenrange 24,36 - &
+bowtie2 -p 8 --very-sensitive --quiet --un D19A_norrna.fq -x sc-rrna -U D19A.fastq | rrna-stats -o D19A_rrna --tam --maxread 51 --lenrange 24,36 - &
+bowtie2 -p 8 --very-sensitive --quiet --un D19B_norrna.fq -x sc-rrna -U D19B.fastq | rrna-stats -o D19B_rrna --tam --maxread 51 --lenrange 24,36 - & 
+# 
+# THIS WASN'T VERY SUCCESSFUL, WE EXPECT ~70% OF READS TO BE NON-RRNA, BUT I GOT ~30% READS BEING NON-RRNA. IDEALLING YOU WANT >10M READS/SAMPLE TO MAKE USEFUL CONCLUSIONS, BUT I'M COMING IN AT 3-5M READS PER SAMPLE.
+# 
+# 
+# ALIGNING RRNA-DEPLETED READS TO THE YEAST GENOME USING TOPHAT2
+# USING A GTF BASED ON THE STEINMETZ DATA; CONSTRUCTING TWO VERSIONS - ONE USING THE ANNOTATIONS CONSISTENT WITH MORE "NORMAL" TRANSCRIPT STRUCTURE, AND ANOTHER WITH ALMOST EVERYTHING.
+# 
+# SHINTARO'S COMMAND
+nohup tophat --bowtie1 --no-novel-juncs --output-dir hEScon_norrna_vs_genome --GTF /mnt/sequence/ingolia/Genomes/Homo_sapiens/hg19_knownGene.gtf /mnt/sequence/ingolia/Genomes/Homo_sapiens/hg19 hEScon.norrna.fq &
+# 
+# WHAT DOES NOHUP DO?
+# PREVENTS A PROCESS FROM STOPPING WHEN YOU LOG OUT OF THE TERMINAL
+# http://en.wikipedia.org/wiki/Nohup
+# 
+# IT SEEMS LIKE A GOOD IDEA TO FOLLOW THE DOC'S SUGGESTION TO BUILD MY TRANSCRIPTOME INDEX USING AN INDEPENDENT TOPHAT2 COMMAND, LIKE SO:
+tophat -G known_genes.gtf \
+    --transcriptome-index=transcriptome_data/known \
+    hg19 
+# 
+# WHICH FOR ME WOULD BE:
+nohup tophat -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known saccharomyces_cerevisiae
+#
+# THE ACTUAL ALIGNMENTS
+
+tophat -o 112A_norrna_v_genome -p4 --solexa1.3-quals --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A_norrna.fq &
+
+tophat -o 112B_norrna_v_genome -p4 --solexa1.3-quals --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112B_norrna.fq &
+
+tophat -o D19A_norrna_v_genome -p4 --solexa1.3-quals --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae D19A_norrna.fq &
+
+tophat -o D19B_norrna_v_genome -p4 --solexa1.3-quals --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae D19B_norrna.fq &
+
+# D19B read2 name didn't start with an @, but it did in the fastq prior to bowtie2 so...
+# I WONDER IF RUNNING IT ON THE READS WITHOUT RRNA DEPLETION WOULD MAKE ANY DIFFERENCE
+
+tophat -o 112A_v_genome -p4 --solexa1.3-quals --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A.fastq &
+
+# NOPE
+# [2014-12-22 17:03:45] Beginning TopHat run (v2.0.10)
+# -----------------------------------------------
+# [2014-12-22 17:03:45] Checking for Bowtie
+# 		  Bowtie version:	 2.1.0.0
+# [2014-12-22 17:03:45] Checking for Samtools
+# 		Samtools version:	 0.1.19.0
+# [2014-12-22 17:03:45] Checking for Bowtie index files (transcriptome)..
+# [2014-12-22 17:03:45] Checking for Bowtie index files (genome)..
+# [2014-12-22 17:03:45] Checking for reference FASTA file
+# 	Warning: Could not find FASTA file saccharomyces_cerevisiae.fa
+# [2014-12-22 17:03:45] Reconstituting reference FASTA file from Bowtie index
+#   Executing: /mnt/ingolialab/linux-x86_64/bin/bowtie2-inspect saccharomyces_cerevisiae > 112A_v_genome/tmp/saccharomyces_cerevisiae.fa
+# [2014-12-22 17:03:46] Generating SAM header for saccharomyces_cerevisiae
+# [2014-12-22 17:03:46] Reading known junctions from GTF file
+# [2014-12-22 17:03:46] Pre-filtering multi-mapped left reads
+# [2014-12-22 17:03:46] Mapping 112A to genome saccharomyces_cerevisiae with Bowtie2 
+# [2014-12-22 17:03:46] Preparing reads
+# 	[FAILED]
+# Error running 'prep_reads'
+# terminate called after throwing an instance of 'int'
+# 
+# mcglincy@compute1:~/NINM001/Sample_NINM01_index1/split/112A_v_genome/logs$ more prep_reads.log
+# prep_reads v2.0.9 (3067M)
+# ---------------------------
+# Saw ASCII character 61 but expected 64-based Phred qual.
+# Try not specifying --solexa1.3-quals/--phred64-quals.
+# terminate called after throwing an instance of 'int'
+
+tophat -o 112A_v_genome -p4 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A.fastq &
+# THIS IS STILL THINKING...
+# THIS WORKED, REPEAT FOR OTHER SAMPLES
+tophat -o 112B_v_genome -p8 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112B.fastq &
+tophat -o D19A_v_genome -p8 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae D19A.fastq &
+tophat -o D19B_v_genome -p8 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae D19B.fastq &
+# 
+# BELOW POINT MIGHT BE WORTH BARING IN MIND
+# 
+# [2014-12-22 17:40:40] Resuming TopHat pipeline with unmapped reads
+# Warning: you have only one segment per read.
+# 	If the read length is greater than or equal to 45bp,
+# 	we strongly recommend that you decrease --segment-length to about half the read length because TopHat will work better with multiple segments
+# 
+tophat -o 112A_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A_norrna.fq &
+
+# THIS DIDN'T WORK
+# prep_reads v2.0.9 (3067M)
+# ---------------------------
+# Error: qual length (91) differs from seq length (90) for fastq record !
+
+# needs bowtie1 index
+
+# [2014-12-22 14:49:36] Beginning TopHat run (v2.0.10)
+# -----------------------------------------------
+# [2014-12-22 14:49:36] Checking for Bowtie
+# 		  Bowtie version:	 2.1.0.0
+# [2014-12-22 14:49:36] Checking for Samtools
+# 		Samtools version:	 0.1.19.0
+# [2014-12-22 14:49:36] Checking for Bowtie index files (transcriptome)..
+# [2014-12-22 14:49:36] Checking for Bowtie index files (genome)..
+# [2014-12-22 14:49:36] Checking for reference FASTA file
+# 	Warning: Could not find FASTA file saccharomyces_cerevisiae.fa
+# [2014-12-22 14:49:36] Reconstituting reference FASTA file from Bowtie index
+#   Executing: /mnt/ingolialab/linux-x86_64/bin/bowtie2-inspect saccharomyces_cerevisiae > 112A_norrna_v_genome/tmp/saccharomyces_cerevisiae.fa
+# [2014-12-22 14:49:37] Generating SAM header for saccharomyces_cerevisiae
+# [2014-12-22 14:49:37] Reading known junctions from GTF file
+# [2014-12-22 14:49:37] Pre-filtering multi-mapped left reads
+# [2014-12-22 14:49:37] Mapping 112A_norrna to genome saccharomyces_cerevisiae with Bowtie2 
+# [2014-12-22 14:49:38] Preparing reads
+# 	[FAILED]
+# Error running 'prep_reads'
+# Error: qual length (91) differs from seq length (90) for fastq record !
+# 
+# SAMTOOLS PROCESSING OUTLINED IN NATURE PROTOCOLS PAPER TO EXTRACT PERFECT-MATCH ALIGNMENTS FROM TOPHAT
+samtools view -h 112A_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > 112A_v_genome.bam &
+samtools view -h 112B_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > 112B_v_genome.bam &
+samtools view -h D19A_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > D19A_v_genome.bam &
+samtools view -h D19B_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > D19B_v_genome.bam &
+# 
+# INDEXED THEM AS SHINTARO DOES FOR IGV
+samtools index 112A_v_genome.bam &
+samtools index 112B_v_genome.bam &
+samtools index D19A_v_genome.bam &
+samtools index D19B_v_genome.bam &
