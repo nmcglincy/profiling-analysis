@@ -10,8 +10,9 @@
 # Splitting by barcode, designate a new folder for this new split
 fastx-split -o split2 -p NN -x NNNNNIIIII --min-insert=14 -s samples.csv sample_clipped.fastq
 # 
+# IT'S A BIT STRANGE THAT THE FATES.TXT FILE IS EXACTLY THE SAME, SHOULDN'T THERE BE MORE SHORT THINGS?
 # MOVE REQUIRED ANNOTATION INTO NEW FOLDER
-# cp *.bt2 ../split2/
+cp *.bt2 ../split2/
 # 
 # ALIGNMENT TO rRNA
 cd split2
@@ -35,7 +36,7 @@ bowtie2 -p 8 --very-sensitive --quiet --un D19B_norrna.fq -x sc-rrna -U D19B.fas
 # 5. Fraction of rRNA reads found in this fragment
 # 6. Cumulative fraction of rRNA reads.
 # 
-diff -q rrna_frags_report.txt ../split/split_rrna_frags_report.txt
+# diff -q rrna_frags_report.txt ../split/split_rrna_frags_report.txt
 # DIFF COMMAND PRODUCED NO OUTPUT, SO THE RESULTS OF THE RRNA MAPPING APPEAR TO BE IDENTIFICAL
 # 
 # TODO 20150102 - WRITE SMALL BASH SCRIPT TO CALCULATE PROPORTION OF READS NOT ALIGNING TO RRNA
