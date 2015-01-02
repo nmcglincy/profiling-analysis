@@ -8,41 +8,56 @@
 # One possible solution would be to use the “-m/--min-insert” option I included in fastx-split to throw out stuff that’s so short as to be uninteresting in any case — I’d guess that 16 bases is a good cutoff for this, though Rachel Green does see interesting stuff that’s this size or smaller, so maybe 14 bases would be good. You would do this by adding “-m14” or “--min-insert=14” to your fastx-split run (then, sadly, re-running the bowtie against rRNA and then the TopHat).
 # 
 # Splitting by barcode, designate a new folder for this new split
-fastx-split -o split2 -p NN -x NNNNNIIIII -m14 -s samples.csv sample_clipped.fastq
+fastx-split -o split2 -p NN -x NNNNNIIIII --min-insert=14 -s samples.csv sample_clipped.fastq
 # 
 # MOVE REQUIRED ANNOTATION INTO NEW FOLDER
-cp *.bt2 ../split2/
+# cp *.bt2 ../split2/
 # 
 # ALIGNMENT TO rRNA
+cd split2
 bowtie2 -p 8 --very-sensitive --quiet --un 112A_norrna.fq -x sc-rrna -U 112A.fastq | rrna-stats -o 112A_rrna --tam --maxread 51 --lenrange 24,36 - &
 bowtie2 -p 8 --very-sensitive --quiet --un 112B_norrna.fq -x sc-rrna -U 112B.fastq | rrna-stats -o 112B_rrna --tam --maxread 51 --lenrange 24,36 - &
 bowtie2 -p 8 --very-sensitive --quiet --un D19A_norrna.fq -x sc-rrna -U D19A.fastq | rrna-stats -o D19A_rrna --tam --maxread 51 --lenrange 24,36 - &
 bowtie2 -p 8 --very-sensitive --quiet --un D19B_norrna.fq -x sc-rrna -U D19B.fastq | rrna-stats -o D19B_rrna --tam --maxread 51 --lenrange 24,36 - & 
 # 
-# THIS WASN'T VERY SUCCESSFUL, WE EXPECT ~70% OF READS TO BE NON-RRNA, BUT I GOT ~30% READS BEING NON-RRNA. IDEALLING YOU WANT >10M READS/SAMPLE TO MAKE USEFUL CONCLUSIONS, BUT I'M COMING IN AT 3-5M READS PER SAMPLE.
+# NICK'S PREVIOUS EMAIL TO ROB AND I
+# Thanks so much for checking that out.
 # 
+# For your reference, the rRNA fragment that showed up in Nick M's samples at high abundance is RDN25-1:739-757, which is pretty abundant in your sample too.
+# 
+# The other two fragments targeted for depletion are RDN25-1:2503-2528 and RDN25-1:3169-3193. The second of these is mostly absent from your sample, while the third is also present at high abundance.
+# 
+# I'm pulling this information mostly from the ...rrna_frags.txt file, which is derived from finding all rRNA sequences where coverage exceeds 1% of all rRNA-aligning reads in the sample and then finding a "fragment" that encompasses the region of high rRNA coverage. The columns are:
+# 1. rRNA sequence name
+# 2. Position of highest coverage
+# 3. Range of nucleotide starting and ending positions that encompass >90% of the total coverage
+# 4. Absolute number of reads mapping to the fragment site
+# 5. Fraction of rRNA reads found in this fragment
+# 6. Cumulative fraction of rRNA reads.
+# 
+diff -q rrna_frags_report.txt ../split/split_rrna_frags_report.txt
+# DIFF COMMAND PRODUCED NO OUTPUT, SO THE RESULTS OF THE RRNA MAPPING APPEAR TO BE IDENTIFICAL
+# 
+# TODO 20150102 - WRITE SMALL BASH SCRIPT TO CALCULATE PROPORTION OF READS NOT ALIGNING TO RRNA
 # 
 # ALIGNING RRNA-DEPLETED READS TO THE YEAST GENOME USING TOPHAT2
 # USING A GTF BASED ON THE STEINMETZ DATA; CONSTRUCTING TWO VERSIONS - ONE USING THE ANNOTATIONS CONSISTENT WITH MORE "NORMAL" TRANSCRIPT STRUCTURE, AND ANOTHER WITH ALMOST EVERYTHING.
 # 
-# SHINTARO'S COMMAND
-nohup tophat --bowtie1 --no-novel-juncs --output-dir hEScon_norrna_vs_genome --GTF /mnt/sequence/ingolia/Genomes/Homo_sapiens/hg19_knownGene.gtf /mnt/sequence/ingolia/Genomes/Homo_sapiens/hg19 hEScon.norrna.fq &
+# COPY OVER RELEVANT GTF
+cp ../split/sac_cer_yassour_utr.gtf .
 # 
-# WHAT DOES NOHUP DO?
-# PREVENTS A PROCESS FROM STOPPING WHEN YOU LOG OUT OF THE TERMINAL
-# http://en.wikipedia.org/wiki/Nohup
-# 
-# IT SEEMS LIKE A GOOD IDEA TO FOLLOW THE DOC'S SUGGESTION TO BUILD MY TRANSCRIPTOME INDEX USING AN INDEPENDENT TOPHAT2 COMMAND, LIKE SO:
-tophat -G known_genes.gtf \
-    --transcriptome-index=transcriptome_data/known \
-    hg19 
-# 
-# WHICH FOR ME WOULD BE:
+# CONSTRUCT INDEX
 nohup tophat -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known saccharomyces_cerevisiae
-#
-# THE ACTUAL ALIGNMENTS
-
+# WORKED WELL
+# 
+# THE ACTUAL ALIGNMENTS, TRY FIRST WITHOUT THE --solexa1.3-quals 
+tophat -o 112A_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A_norrna.fq &
+# 
+# GOT THE SAME DISPARITY BETWEEN LONG READ AND QUALITY LENGTH THAT I DID BEFORE, TRY PUTTING IN QUALITY SCORES
 tophat -o 112A_norrna_v_genome -p4 --solexa1.3-quals --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A_norrna.fq &
+# GOT THE INT ERROR
+tophat -o 112A_norrna_v_genome -p4 --solexa-quals --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A_norrna.fq &
+# GOT THE SEQUENCE LENGTH ERROR
 
 tophat -o 112B_norrna_v_genome -p4 --solexa1.3-quals --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112B_norrna.fq &
 
