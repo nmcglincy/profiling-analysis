@@ -1,0 +1,12 @@
+# 20150102 - ANALYSING PROFILING OF KENDRA AND I'S DELETANTS
+# 
+# DOWNLOADING DATA FROM PROFILING LIBRARIES NINM002 & NINM003
+mkdir NINM002
+cd NINM002
+wget -m -nH --cut-dirs=5 ftp://GSL_FTP:B206Stanley@cornerstone.qb3.berkeley.edu//141223_HS4A/Project_Ingolia/Sample_NINM002_index1
+cd ..
+mkdir NINM003
+cd NINM003
+wget -m -nH --cut-dirs=5 ftp://GSL_FTP:B206Stanley@cornerstone.qb3.berkeley.edu//141223_HS4A/Project_Ingolia/Sample_NINM003_index1
+# 
+# WORKED PERFECTLY

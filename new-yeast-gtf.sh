@@ -84,7 +84,3 @@ awk -f anno-to-gtf.awk mTIF-exVanilla-ypd1 > mTIF-exVanilla.gtf
 # 
 # TRY A DIFFERENT TAC FROM NICK'S NOTES, IMPORTING A BED FILE
 awk -f anno-to-bed.gtf mTIF-exVanilla-ypd1 > mTIF-exVanilla.bed
-
-
-# TODO - HAVE 5PUTR & 3PUTR AS SEPARATE ANNOTATIONS IN GTF.
-# 
