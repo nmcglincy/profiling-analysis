@@ -10,3 +10,35 @@ cd NINM003
 wget -m -nH --cut-dirs=5 ftp://GSL_FTP:B206Stanley@cornerstone.qb3.berkeley.edu//141223_HS4A/Project_Ingolia/Sample_NINM003_index1
 # 
 # WORKED PERFECTLY
+# 
+# MAKE DIRECTORIES FOR:
+# TMA7 ANALYSIS
+# TMA64 ANALYSIS
+# YEAST ANNOTATION
+mkdir tma7
+mkdir tma64
+mkdir yeast_annotation
+# 
+# MOVE THE YEAST BOWTIE2 INDICES AND GTF INTO THEIR NEW FOLDER
+cp /mnt/ingolialab/mcglincy/NINM001/Sample_NINM01_index1/split3/*.bt2 /mnt/ingolialab/mcglincy/yeast_annotation
+cp /mnt/ingolialab/mcglincy/NINM001/Sample_NINM01_index1/split3/sac_cer_yassour_utr.gtf /mnt/ingolialab/mcglincy/yeast_annotation
+# 
+# ** 20150105 2PM RUN UP TO HERE **
+# 
+# MOVING SAMPLE FILES INTO RELEVANT DIRECTORIES
+
+# 
+# FOR EACH LIBRARY:
+# 	UNZIP .fastq.gz
+# 	PIPE TO fastx_clipper TO REMOVE ADAPTOR SEQUENCE
+cd NINM002
+zcat *.fastq.gz | fastx_clipper -Q33 -a TGATCGGAAGAGCACACGTC -c -v -o sample_clipped.fastq &
+cd ../NINM003
+zcat *.fastq.gz | fastx_clipper -Q33 -a TGATCGGAAGAGCACACGTC -c -v -o sample_clipped.fastq &
+# 
+# RUN FASTX-SPLIT ON EACH LIBRARY DIRECTORY SEPARATELY
+fastx-split -o split -p NN -x NNNNNIIIII --min-insert=14 -s samples.csv sample_clipped.fastq &
+cd ../NINM002
+fastx-split -o split -p NN -x NNNNNIIIII --min-insert=14 -s samples.csv sample_clipped.fastq &
+# 
+# REORGANISE THE DATA INTO EXPT CENTRIC DIRECTORIES
