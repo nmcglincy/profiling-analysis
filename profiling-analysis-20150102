@@ -144,6 +144,9 @@ tophat -o 112A_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour_utr.gtf -
 # Error running 'prep_reads'
 # Error: qual length (91) differs from seq length (90) for fastq record !
 # 
+# 
+# 
+
 # SAMTOOLS PROCESSING OUTLINED IN NATURE PROTOCOLS PAPER TO EXTRACT PERFECT-MATCH ALIGNMENTS FROM TOPHAT
 samtools view -h 112A_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > 112A_v_genome.bam &
 samtools view -h 112B_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > 112B_v_genome.bam &
