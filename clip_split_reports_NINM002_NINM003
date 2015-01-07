@@ -1,0 +1,71 @@
+>NINM002 fastx-clipper report
+Clipping Adapter: TGATCGGAAGAGCACACGTC
+Min. Length: 5
+Non-Clipped reads - discarded.
+Input: 186127266 reads.
+Output: 172365493 reads.
+discarded 8293669 too-short reads.
+discarded 153041 adapter-only reads.
+discarded 5101934 non-clipped reads.
+discarded 213129 N reads.
+
+>NINM003 fastx-clipper report
+Min. Length: 5
+Non-Clipped reads - discarded.
+Input: 182641611 reads.
+Output: 168949574 reads.
+discarded 7108748 too-short reads.
+discarded 587399 adapter-only reads.
+discarded 5789010 non-clipped reads.
+discarded 206880 N reads.
+
+
+mcglincy@compute1:~/NINM002/split$ more fates.txt 
+UnknownIndex	NNNNN	59936332	34.77%
+112Aks			AGCTA	70039		0.04%
+D7A				CGTAA	83099089	48.21%
+112Bnm			GCATA	198555		0.12%
+D64B			TCTAG	11563778	6.71%
+short			N/A		17497700	10.15%
+
+mcglincy@compute1:~/NINM002/split2$ more fates.txt 
+UnknownIndex	NNNNN	8760765		5.08%
+112Aks			AGCTA	70039		0.04%
+112Bks			ATCGT	40560144	23.53%
+D7A				CGTAA	83099089	48.21%
+D7B				CTAGA	106018		0.06%
+112Anm			GATCA	196794		0.11%
+112Bnm			GCATA	198555		0.12%
+D64A			TAGAC	10312611	5.98%
+D64B			TCTAG	11563778	6.71%
+short			N/A		17497700	10.15%
+
+
+mcglincy@compute1:~/NINM003/split$ more fates.txt 
+UnknownIndex	NNNNN	69556653	41.17%
+112Bks			ATCGT	77477		0.05%
+D7B				CTAGA	1466278		0.87%
+112Anm			GATCA	38567594	22.83%
+D64A			TAGAC	250879		0.15%
+short			N/A		59030693	34.94%
+
+mcglincy@compute1:~/NINM003/split2$ more fates.txt 
+UnknownIndex	NNNNN	8950373		5.30%
+112Aks			AGCTA	693572		0.41%
+112Bks			ATCGT	77477		0.05%
+D7A				CGTAA	130169		0.08%
+D7B				CTAGA	1466278		0.87%
+112Anm			GATCA	38567594	22.83%
+112Bnm			GCATA	59757383	35.37%
+D64A			TAGAC	250879		0.15%
+D64B			TCTAG	25156		0.01%
+short			N/A		59030693	34.94%
+
+
+mcglincy@compute1:~/NINM001/Sample_NINM01_index1/split3$ more fates.txt 
+UnknownIndex	NNNNN	3165274		3.81%
+112A			AGCTA	16058757	19.31%
+112B			ATCGT	14921858	17.95%
+D19A			CGTAA	13347390	16.05%
+D19B			CTAGA	14731015	17.72%
+short			N/A		20920454	25.16%

@@ -34,15 +34,22 @@ scp P2_NINM003_samples mcglincy@compute1.ingolia-lab.org:/mnt/ingolialab/mcglinc
 # 	UNZIP .fastq.gz
 # 	PIPE TO fastx_clipper TO REMOVE ADAPTOR SEQUENCE
 cd NINM002
-zcat *.fastq.gz | fastx_clipper -Q33 -a TGATCGGAAGAGCACACGTC -c -v -o sample_clipped.fastq #IN PROGRESS
+zcat *.fastq.gz | fastx_clipper -Q33 -a TGATCGGAAGAGCACACGTC -c -v -o sample_clipped.fastq 
 cd ../NINM003
-zcat *.fastq.gz | fastx_clipper -Q33 -a TGATCGGAAGAGCACACGTC -c -v -o sample_clipped.fastq
+zcat *.fastq.gz | fastx_clipper -Q33 -a TGATCGGAAGAGCACACGTC -c -v -o sample_clipped.fastq 
 # 
 # RUN FASTX-SPLIT ON EACH LIBRARY DIRECTORY SEPARATELY
 fastx-split -o split -p NN -x NNNNNIIIII --min-insert=14 -s P2_NINM003_samples sample_clipped.fastq
 cd ../NINM002
 fastx-split -o split -p NN -x NNNNNIIIII --min-insert=14 -s P1_NINM002_samples sample_clipped.fastq
 # 
+scp combo_samples mcglincy@compute1.ingolia-lab.org:/mnt/ingolialab/mcglincy/NINM002/
+scp combo_samples mcglincy@compute1.ingolia-lab.org:/mnt/ingolialab/mcglincy/NINM003/
+#
+cd NINM002
+fastx-split -o split2 -p NN -x NNNNNIIIII --min-insert=14 -s combo_samples sample_clipped.fastq
+cd ../NINM003
+fastx-split -o split2 -p NN -x NNNNNIIIII --min-insert=14 -s combo_samples sample_clipped.fastq
 # REORGANISE THE DATA INTO EXPT CENTRIC DIRECTORIES
 
 #
