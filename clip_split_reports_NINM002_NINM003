@@ -19,6 +19,7 @@ discarded 587399 adapter-only reads.
 discarded 5789010 non-clipped reads.
 discarded 206880 N reads.
 
+---
 
 mcglincy@compute1:~/NINM002/split$ more fates.txt 
 UnknownIndex	NNNNN	59936332	34.77%
@@ -61,6 +62,21 @@ D64A			TAGAC	250879		0.15%
 D64B			TCTAG	25156		0.01%
 short			N/A		59030693	34.94%
 
+---
+
+mcglincy@compute1:~/NINM002-NINM003-fus/split$ more fates.txt 
+UnknownIndex	NNNNN	17711138	5.19%
+112Aks			AGCTA	763611		0.22%
+112Bks			ATCGT	40637621	11.91%
+D7A				CGTAA	83229258	24.38%
+D7B				CTAGA	1572296		0.46%
+112Anm			GATCA	38764388	11.36%
+112Bnm			GCATA	59955938	17.57%
+D64A			TAGAC	10563490	3.09%
+D64B			TCTAG	11588934	3.40%
+short			N/A		76528393	22.42%
+
+---
 
 mcglincy@compute1:~/NINM001/Sample_NINM01_index1/split3$ more fates.txt 
 UnknownIndex	NNNNN	3165274		3.81%

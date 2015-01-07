@@ -51,7 +51,7 @@ fastx-split -o split2 -p NN -x NNNNNIIIII --min-insert=14 -s combo_samples sampl
 cd ../NINM003
 fastx-split -o split2 -p NN -x NNNNNIIIII --min-insert=14 -s combo_samples sample_clipped.fastq
 # REORGANISE THE DATA INTO EXPT CENTRIC DIRECTORIES
-
+fastx-split -o split -p NN -x NNNNNIIIII --min-insert=14 -s combo_samples sample_clipped.fastq
 #
 # LOGGING INTO COMPUTE1
 ssh <your name>@compute1.ingolia-lab.org
