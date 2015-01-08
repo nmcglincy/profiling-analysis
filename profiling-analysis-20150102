@@ -145,16 +145,27 @@ tophat -o 112A_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour_utr.gtf -
 # Error: qual length (91) differs from seq length (90) for fastq record !
 # 
 # 
-# 
-
+# NICK INSTALLED A NEW VERSION OF FASTX-SPLIT. RRNA DEPLETED FILES NOW WORK WITH TOPHAT, NO READS <14 NT EVIDEN
+tophat -o 112A_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A_norrna.fq &
+tophat -o 112B_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112B_norrna.fq &
+tophat -o D19A_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae D19A_norrna.fq &
+tophat -o D19B_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour_utr.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae D19B_norrna.fq &
+#
 # SAMTOOLS PROCESSING OUTLINED IN NATURE PROTOCOLS PAPER TO EXTRACT PERFECT-MATCH ALIGNMENTS FROM TOPHAT
-samtools view -h 112A_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > 112A_v_genome.bam &
-samtools view -h 112B_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > 112B_v_genome.bam &
-samtools view -h D19A_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > D19A_v_genome.bam &
-samtools view -h D19B_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > D19B_v_genome.bam &
+samtools view -h 112A_norrna_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > 112A_norrna_v_genome.bam &
+samtools view -h 112B_norrna_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > 112B_norrna_v_genome.bam &
+samtools view -h D19A_norrna_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > D19A_norrna_v_genome.bam &
+samtools view -h D19B_norrna_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > D19B_norrna_v_genome.bam &
 # 
 # INDEXED THEM AS SHINTARO DOES FOR IGV
-samtools index 112A_v_genome.bam &
-samtools index 112B_v_genome.bam &
-samtools index D19A_v_genome.bam &
-samtools index D19B_v_genome.bam &
+samtools index 112A_norrna_v_genome.bam &
+samtools index 112B_norrna_v_genome.bam &
+samtools index D19A_norrna_v_genome.bam &
+samtools index D19B_norrna_v_genome.bam &
+#
+# RUNNING NICK'S FP-FRAMING & FP-COUNT SCRIPTS
+#
+# FIRST NEED TO CONVERT MY GTF TO A BED FILE
+gtf2bed < sac_cer_yassour_utr.gtf > sac_cer_yassour_utr.gtf.bed
+# THAT'S WEIRD, DOESN'T LOOK LIKE NICK'S BED FILE - THERE'S MORE LINES, AND IT DOESN'T HAVE THE NUMBERS AT THE END.
+#
