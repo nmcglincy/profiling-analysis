@@ -167,5 +167,95 @@ samtools index D19B_norrna_v_genome.bam &
 #
 # FIRST NEED TO CONVERT MY GTF TO A BED FILE
 gtf2bed < sac_cer_yassour_utr.gtf > sac_cer_yassour_utr.gtf.bed
-# THAT'S WEIRD, DOESN'T LOOK LIKE NICK'S BED FILE - THERE'S MORE LINES, AND IT DOESN'T HAVE THE NUMBERS AT THE END.
 #
+# THAT'S WEIRD, DOESN'T LOOK LIKE NICK'S BED FILE - THERE'S MORE LINES, AND IT DOESN'T HAVE THE NUMBERS AT THE END.
+# PROCEED WITH NICK'S sac_cer_yassour.bed; FROM NICK'S DIRECTORY:
+cp sac_cer_yassour.bed /mnt/ingolialab/mcglincy/NINM001/Sample_NINM01_index1/split3
+#
+# RUNNING FP-FRAMING
+# Preliminary reading-frame and unweighted meta-gene quality control
+# 
+# samtools index SAMPLE_vs_genome/accepted_hits.bam
+# fp-framing -o Statistics/SAMPLE -b /PATH/TO/TRANSCRIPTOME.bed \
+# SAMPLE_vs_genome/accepted_hits.bam
+# 
+# You’ll get a collection of 4 files:
+# Statistics/SAMPLE_frame_len.txt 
+# gives reading frame statistics: 
+# length, 
+# fraction of CDS-aligned reads at that length, 
+# and then absolute read count & fraction read counts for each position.
+
+# Statistics/SAMPLE_start_pos_len.txt and Statistics/SAMPLE_end_pos_len.txt are meta-gene tables centered on the start and stop codons. The first column is the offset relative to the start (or stop) codon, the second is the total number of reads whose 5’ end maps to that position, and the following columns are broken down per read length.
+# 
+# Writing an asites.txt A site offset file
+# Using the fp-framing information you need to set up an A site offsets table. I use the information in the frame_len table most heavily. I’d suggest starting by assuming that the 28mer A site is about +15 and then checking which sub-codon position is most common there — if it’s the 1st (footprint fragment on 1st nucleotide of the codon) you want 15, if it’s the 2nd probably 14 and 3rd probably 16. I then do the same for all fragment lengths having at least 5% of total reads — usually 4 or 5 distinct fragment lengths — and making the A site offset bigger as needed for longer fragments or smaller for shorter.
+# 
+# The actual a sites file is just a tab-delimited text file with two columns: fragment length and A site offset. So it might look like
+# 26	14
+# 27	15
+# 28	15
+# 29	15
+# 30	16
+# 31	16
+# 
+# I DID THE INDEXING ALREADY, SO PROCEEDING TO FP-FRAMING
+mkdir Statistics
+fp-framing -o Statistics/112A_norrna_vs_genome -b sac_cer_yassour.bed 112A_norrna_v_genome.bam &
+fp-framing -o Statistics/112B_norrna_vs_genome -b sac_cer_yassour.bed 112B_norrna_v_genome.bam &
+fp-framing -o Statistics/D19A_norrna_vs_genome -b sac_cer_yassour.bed D19A_norrna_v_genome.bam &
+fp-framing -o Statistics/D19B_norrna_vs_genome -b sac_cer_yassour.bed D19B_norrna_v_genome.bam &
+
+# 
+# 
+cp sac_cer_yassour.gtf /mnt/ingolialab/mcglincy/NINM001/Sample_NINM01_index1/split3
+mkdir old-gtf-alignments
+
+cd old-gtf-alignments
+nohup tophat -G sac_cer_yassour.gtf --transcriptome-index=transcriptome_data/known saccharomyces_cerevisiae
+tophat -o 112A_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112A_norrna.fq &
+tophat -o 112B_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae 112B_norrna.fq &
+tophat -o D19A_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae D19A_norrna.fq &
+tophat -o D19B_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae D19B_norrna.fq &
+# 
+# EXTRACT PERFECT MATCHES AND INDEX AS BEFORE
+# RETRY FP-FRAMING
+mkdir Statistics
+fp-framing -o Statistics/112A_norrna_v_genome -b sac_cer_yassour.bed 112A_norrna_v_genome.bam &
+fp-framing -o Statistics/112B_norrna_v_genome -b sac_cer_yassour.bed 112B_norrna_v_genome.bam &
+fp-framing -o Statistics/D19A_norrna_v_genome -b sac_cer_yassour.bed D19A_norrna_v_genome.bam &
+fp-framing -o Statistics/D19B_norrna_v_genome -b sac_cer_yassour.bed D19B_norrna_v_genome.bam &
+
+# STUPID TYPO was causing it not to work, I HAD USED _v_, Nick had use _vs_ in the filenames
+# 
+# WORTH TALKING TO NICK ABOUT THE DEFAULTS IN TERMS OF FRAGMENT LENGTH ETC.
+# 
+# fp-count
+# Counting reads aliging to CDSes as a measure of gene expression
+# Once you have an asites.txt file you can run fp-count as so:
+# fp-count -o SAMPLE_qexpr.txt -b /PATH/TO/TRANSCRIPTOME.bed -a asites.txt \
+# SAMPLE_vs_genome/accepted_hits.bam
+
+# You’ll get an output file called SAMPLE_qexpr.txt with three columns: gene name, length of the “quantified region”, and read count. The quantified region takes into account the length of the region at the start and the end of the gene that are excluded, which is 15 from the start and 5 from the end.
+
+# Making wiggle tracks that can be viewed in genome browsers
+# To make wiggle tracks (really, to make bigWig tracks) you need a table listing the sizes of all of your chromosomes. The easiest way to do this is to extract the information from your bowtie2 reference:
+
+# bowtie2-inspect -s /PATH/TO/GENOME \
+# | grep ^Sequ \
+# | cut -f2,3 \
+# > chr.sizes.txt
+
+# You can check out that file and make sure that it lists each chromosome along with its length.
+
+# Then you can generate wiggle tracks:
+# wiggle-track -o SAMPLE.wig -a asites.txt SAMPLE_vs_genome/accepted_hits.bam
+# and convert them to bigwig tracks:
+# wigToBigWig SAMPLE_fwd.wig chr.sizes.txt SAMPLE_fwd.bw
+# wigToBigWig SAMPLE_rev.wig chr.sizes.txt SAMPLE_rev.bw
+fp-count -o Statistics/112A_norrna_v_genome_qexpr.txt -b sac_cer_yassour.bed -a Statistics/asites.txt 112A_norrna_v_genome.bam &
+
+fp-count -o Statistics/112B_norrna_v_genome_qexpr.txt -b sac_cer_yassour.bed -a Statistics/asites.txt 112B_norrna_v_genome.bam &
+fp-count -o Statistics/D19A_norrna_v_genome_qexpr.txt -b sac_cer_yassour.bed -a Statistics/asites.txt D19A_norrna_v_genome.bam &
+fp-count -o Statistics/D19B_norrna_v_genome_qexpr.txt -b sac_cer_yassour.bed -a Statistics/asites.txt D19B_norrna_v_genome.bam &
+
