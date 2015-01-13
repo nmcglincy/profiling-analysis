@@ -56,3 +56,4 @@ fastx-split -o split -p NN -x NNNNNIIIII --min-insert=14 -s combo_samples sample
 # LOGGING INTO COMPUTE1
 ssh <your name>@compute1.ingolia-lab.org
 # ENTER PASSWORD WHEN PROMPTED
+# 

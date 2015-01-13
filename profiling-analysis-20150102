@@ -219,6 +219,18 @@ tophat -o D19A_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour.gtf --tra
 tophat -o D19B_norrna_v_genome -p4 --no-novel-juncs -G sac_cer_yassour.gtf --transcriptome-index=transcriptome_data/known -M saccharomyces_cerevisiae D19B_norrna.fq &
 # 
 # EXTRACT PERFECT MATCHES AND INDEX AS BEFORE
+# SAMTOOLS PROCESSING OUTLINED IN NATURE PROTOCOLS PAPER TO EXTRACT PERFECT-MATCH ALIGNMENTS FROM TOPHAT
+samtools view -h 112A_norrna_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > 112A_norrna_v_genome.bam &
+samtools view -h 112B_norrna_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > 112B_norrna_v_genome.bam &
+samtools view -h D19A_norrna_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > D19A_norrna_v_genome.bam &
+samtools view -h D19B_norrna_v_genome/accepted_hits.bam | grep -E '(NM:i:0)|(^@)' | samtools view -S -b - > D19B_norrna_v_genome.bam &
+# 
+# INDEXED THEM AS SHINTARO DOES FOR IGV
+samtools index 112A_norrna_v_genome.bam &
+samtools index 112B_norrna_v_genome.bam &
+samtools index D19A_norrna_v_genome.bam &
+samtools index D19B_norrna_v_genome.bam &
+# 
 # RETRY FP-FRAMING
 mkdir Statistics
 fp-framing -o Statistics/112A_norrna_v_genome -b sac_cer_yassour.bed 112A_norrna_v_genome.bam &
@@ -254,7 +266,6 @@ fp-framing -o Statistics/D19B_norrna_v_genome -b sac_cer_yassour.bed D19B_norrna
 # wigToBigWig SAMPLE_fwd.wig chr.sizes.txt SAMPLE_fwd.bw
 # wigToBigWig SAMPLE_rev.wig chr.sizes.txt SAMPLE_rev.bw
 fp-count -o Statistics/112A_norrna_v_genome_qexpr.txt -b sac_cer_yassour.bed -a Statistics/asites.txt 112A_norrna_v_genome.bam &
-
 fp-count -o Statistics/112B_norrna_v_genome_qexpr.txt -b sac_cer_yassour.bed -a Statistics/asites.txt 112B_norrna_v_genome.bam &
 fp-count -o Statistics/D19A_norrna_v_genome_qexpr.txt -b sac_cer_yassour.bed -a Statistics/asites.txt D19A_norrna_v_genome.bam &
 fp-count -o Statistics/D19B_norrna_v_genome_qexpr.txt -b sac_cer_yassour.bed -a Statistics/asites.txt D19B_norrna_v_genome.bam &

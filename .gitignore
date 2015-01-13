@@ -62,3 +62,7 @@ D19B_stats.txt
 mcglincy@compute1.ingolia-lab.org
 
 UnknownIndex_stats.txt
+
+*.txt
+
+*.csv
