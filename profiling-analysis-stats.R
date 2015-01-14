@@ -52,3 +52,16 @@ ggsave("dist-footprint-lengths.png", dpi = 400)
 dev.off()
 # 
 # DIFFERENTIAL EXPRESSION ANALYSIS
+# 
+# READING IN THE DATA
+qexpr.files = list.files(pattern = "*qexpr.txt")
+qexpr.data.l = list()
+for (i in qexpr.files) {
+  qexpr.data.l[[i]] = assign(i,
+                             read.table(file = i,
+                              header = FALSE,
+                              sep = "\t",
+                              stringsAsFactors = FALSE))
+  names(qexpr.data.l) = c("gene.id", "")     
+}
+

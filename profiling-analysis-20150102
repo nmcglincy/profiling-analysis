@@ -269,4 +269,7 @@ fp-count -o Statistics/112A_norrna_v_genome_qexpr.txt -b sac_cer_yassour.bed -a 
 fp-count -o Statistics/112B_norrna_v_genome_qexpr.txt -b sac_cer_yassour.bed -a Statistics/asites.txt 112B_norrna_v_genome.bam &
 fp-count -o Statistics/D19A_norrna_v_genome_qexpr.txt -b sac_cer_yassour.bed -a Statistics/asites.txt D19A_norrna_v_genome.bam &
 fp-count -o Statistics/D19B_norrna_v_genome_qexpr.txt -b sac_cer_yassour.bed -a Statistics/asites.txt D19B_norrna_v_genome.bam &
-
+# 
+# 
+samtools view -c -F 4 *_norrna_v_genome.bam
+samtools view -c -f 4 *_norrna_v_genome.bam
