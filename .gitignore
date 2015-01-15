@@ -66,3 +66,7 @@ UnknownIndex_stats.txt
 *.txt
 
 *.csv
+
+*.sgd
+
+*.gz

@@ -188,7 +188,8 @@ pheno.df = data.frame(row.names = colnames(count.data.m),
                       genotype = factor(c(rep("wt", 2), rep("del", 2)), levels = c("wt", "del")))
 # str(pheno.df)
 # colnames(count.data.m)
-# 
+#
+library(DESeq2)
 deseq.data <- DESeqDataSetFromMatrix(countData = count.data.m,
                                      colData = pheno.df,
                                      design = ~ genotype)
@@ -351,6 +352,17 @@ heatmap.2(mat,
 dev.off()
 # 
 # GO ANALYSIS
+# 
+# RATHER THAT JUST TAKE THE WHOLE YEAST GENOME AS MY BACKGROUND, I WANTED TO TAKE THE GENES THAT I
+# HAD BEEN ABLE TO DETECT AT ALL
+library(GO.db)
+ls("package:GO.db")
+
+source("http://bioconductor.org/biocLite.R")
+biocLite("org.Sc.sgd.db")
+library("org.Sc.sgd.db")
+ls("package:org.Sc.sgd.db")
+
 
 
 
