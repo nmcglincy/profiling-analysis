@@ -74,3 +74,5 @@ UnknownIndex_stats.txt
 Statistics/detectable-gene-list
 
 Statistics/diff-exp-gene
+
+*.xls
