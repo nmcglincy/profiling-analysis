@@ -70,3 +70,7 @@ UnknownIndex_stats.txt
 *.sgd
 
 *.gz
+
+Statistics/detectable-gene-list
+
+Statistics/diff-exp-gene
