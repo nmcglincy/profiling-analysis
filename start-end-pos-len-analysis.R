@@ -160,7 +160,7 @@ ggplot(end.pos.df, aes(x = pos, y = total.reads, colour = .id)) +
   geom_line() +
   ylab("Total reads") +
   xlab(expression(paste("Position relative to ", "UG", underline(bold(A)), sep = ""))) +
-  xlim(c(-40, 40)) +
+#   xlim(c(-40, 40)) +
 #   coord_trans(ytrans = "log2") +
 #   scale_y_continuous(breaks = c(seq(from = 20, to = 80, by = 20),
 #                                 seq(from = 100, to = 800, by = 200),
@@ -185,7 +185,7 @@ ggplot(end.ldf.nototal, aes(x = pos, y = count, fill = reads)) +
   geom_bar(stat = "identity",
            position = "fill") +
   facet_wrap(~.id, ncol = 2) +
-  xlab(expression(paste("Position relative to ", underline(bold(A)), "UG", sep = ""))) +
+  xlab(expression(paste("Position relative to ", "UG", underline(bold(A)), sep = ""))) +
   ylab("Proportion of reads") +
   scale_x_continuous(expand=c(0,0), limits = c(-40, 25)) + 
   scale_y_continuous(expand=c(0,0)) +
@@ -200,7 +200,7 @@ ggplot(end.ldf.nototal, aes(x = pos, y = count, fill = reads)) +
         strip.text.x = element_text(size = 14),
         strip.text.y = element_text(size = 14))
 # YEAH, DOESN'T LOOK THAT USEFUL
-ggplot(end.ldf.nototal, aes(x = pos, y = reads, fill = count)) +
+ggplot(end.ldf.nototal, aes(x = pos, y = reads, fill = log2(count))) +
   geom_tile() +
   scale_fill_continuous(na.value = "transparent", low = "white", high = "purple3") +
   facet_wrap(~.id, ncol = 2) +
