@@ -18,22 +18,20 @@ for (i in start.files) {
                                        stringsAsFactors = FALSE))
 }
 names(start.pos.l) = c("BY4742.A", "BY4742.B", "D19A", "D19B")
-# str(start.pos.l)
+# 
 library(plyr)
 start.pos.df = ldply(start.pos.l)
-# head(start.pos.df)
-# dim(start.pos.df)
+# 
 library(dplyr)
 library(tidyr)
 start.pos.ldf = start.pos.df %>%
   gather(reads, count, total.reads:reads.l34)
-# head(start.pos.ldf)
-# dim(start.pos.ldf)
 # 
 # HOW MANY TOTAL READS IN EACH SAMPLE
-start.pos.df %>%
-  group_by(.id) %>%
-  summarise(total = sum(total.reads))
+capture.output(start.pos.df %>%
+                 group_by(.id) %>%
+                 summarise(total = sum(total.reads)),
+               file = "start-total-reads.txt")
 # 
 library(ggplot2)
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
@@ -58,21 +56,17 @@ ggplot(start.pos.df, aes(x = pos, y = total.reads, colour = .id)) +
         legend.title = element_text(size = 16),
         strip.text.x = element_text(size = 14),
         strip.text.y = element_text(size = 14))
+ggsave("start-total-reads.png")
 # 
 # SUBSET TO AVOID +77 PEAK PERMENANTLY
 start.pos.df2 = subset(start.pos.df, pos < 77)
-# start.pos.df2
-# head(start.pos.df2)
-# str(start.pos.df2)
-# summary(start.pos.df2)
 # 
 # MAKING A LONG VERSION OF DF2
 start.pos.ldf2 = start.pos.df2 %>%
   gather(reads, count, total.reads:reads.l34)
-head(start.pos.ldf2)
 ldf2.nototal = start.pos.ldf2 %>%
   filter(reads != "total.reads")
-head(ldf2.nototal)
+# 
 ggplot(ldf2.nototal, aes(x = pos, y = count, fill = reads)) +
   geom_bar(stat = "identity",
            position = "fill") +
@@ -90,6 +84,7 @@ ggplot(ldf2.nototal, aes(x = pos, y = count, fill = reads)) +
         strip.text.x = element_text(size = 14),
         strip.text.y = element_text(size = 14))
 # YEAH, DOESN'T LOOK THAT USEFUL
+# 
 ggplot(ldf2.nototal, aes(x = pos, y = reads, fill = count)) +
   geom_tile() +
   scale_fill_continuous(na.value = "transparent", low = "white", high = "purple") +
@@ -108,6 +103,7 @@ ggplot(ldf2.nototal, aes(x = pos, y = reads, fill = count)) +
         legend.title = element_text(size = 16),
         strip.text.x = element_text(size = 14),
         strip.text.y = element_text(size = 14))
+ggsave("start-freq-bylength.png")
 # DOESN'T SEEM LIKE LIKE THERE'S MUCH DIFFERENCE
 # APPEARANCE OF LONGER READS IN THE CDS - NI & LL SUGGES COMPARING RATIO OF NORMAL TO LONG READS
 # BETWEEN UTR AND CDS TO SEE WHETHER IT'S A SAMPLING THING OR NOT
@@ -137,22 +133,19 @@ for (i in end.files) {
                                        stringsAsFactors = FALSE))
 }
 names(end.pos.l) = c("BY4742.A", "BY4742.B", "D19A", "D19B")
-str(end.pos.l)
 # library(plyr)
 end.pos.df = ldply(end.pos.l)
-head(end.pos.df)
-# dim(end.pos.df)
+# 
 # library(dplyr)
 # library(tidyr)
 end.pos.ldf = end.pos.df %>%
   gather(reads, count, total.reads:reads.l34)
-head(end.pos.ldf)
-dim(end.pos.ldf)
 # 
 # HOW MANY TOTAL READS IN EACH SAMPLE
-end.pos.df %>%
-  group_by(.id) %>%
-  summarise(total = sum(total.reads))
+capture.output(end.pos.df %>%
+                 group_by(.id) %>%
+                 summarise(total = sum(total.reads)),
+               file = "end-total-reads.txt")
 # 
 # library(ggplot2)
 # cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
@@ -177,10 +170,14 @@ ggplot(end.pos.df, aes(x = pos, y = total.reads, colour = .id)) +
         legend.title = element_text(size = 16),
         strip.text.x = element_text(size = 14),
         strip.text.y = element_text(size = 14))
-
+ggsave("end-total-reads.png")
+# 
+# THE D19 MUTANT ARE REPRODUCIBLY LOWER IN THE FINAL MAJOR PEAK, BUT THIS SEEMS TO TARRY WITH THEIR
+# OVERALL LOWER NUMBER OF READS
+# 
 end.ldf.nototal = end.pos.ldf %>%
   filter(reads != "total.reads")
-head(end.ldf.nototal)
+# 
 ggplot(end.ldf.nototal, aes(x = pos, y = count, fill = reads)) +
   geom_bar(stat = "identity",
            position = "fill") +
@@ -200,7 +197,7 @@ ggplot(end.ldf.nototal, aes(x = pos, y = count, fill = reads)) +
         strip.text.x = element_text(size = 14),
         strip.text.y = element_text(size = 14))
 # YEAH, DOESN'T LOOK THAT USEFUL
-ggplot(end.ldf.nototal, aes(x = pos, y = reads, fill = log2(count))) +
+ggplot(end.ldf.nototal, aes(x = pos, y = reads, fill = count)) +
   geom_tile() +
   scale_fill_continuous(na.value = "transparent", low = "white", high = "purple3") +
   facet_wrap(~.id, ncol = 2) +
@@ -221,5 +218,6 @@ ggplot(end.ldf.nototal, aes(x = pos, y = reads, fill = log2(count))) +
         legend.title = element_text(size = 16),
         strip.text.x = element_text(size = 14),
         strip.text.y = element_text(size = 14))
+ggsave("end-freq-bylength.png")
 # 
-# DID ANYONE EVER SEE THIS DENSITY OF 30nt reads at the end?
+# DID ANYONE EVER SEE THIS DENSITY OF 30nt reads at the end? - YES, EVERYONE
